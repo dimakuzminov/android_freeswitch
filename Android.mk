@@ -10,7 +10,7 @@ $(shell cp \
 
 # include libs
 include $(LOCAL_PATH)/android_libapr.mk
-#include $(LOCAL_PATH)/android_libapr-utils.mk
+include $(LOCAL_PATH)/android_libapr-utils.mk
 #include $(LOCAL_PATH)/android_libesl.mk
 #include $(LOCAL_PATH)/android_libtpl.mk
 #include $(LOCAL_PATH)/android_libspandsp.mk

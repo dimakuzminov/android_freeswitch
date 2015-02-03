@@ -52,11 +52,8 @@ opal
 /apr-util/export_vars.c
 /apr-util/export_vars.sh
 /apr-util/include/apr_ldap.h
-/apr-util/include/apu_config.h
-/apr-util/include/apu.h
 /apr-util/include/apu_select_dbm.h
 /apr-util/include/apu_want.h
-/apr-util/include/private/apu_config.h
 /apr-util/include/private/apu_config.h.in
 /apr-util/include/private/apu_select_dbm.h
 /apr-util/.make.dirs

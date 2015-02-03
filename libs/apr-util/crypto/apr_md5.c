@@ -76,6 +76,12 @@
 #include <pthread.h>
 #endif
 
+#ifdef ANDROID
+#include <openssl/des.h>
+#define crypt(b,s) DES_crypt((b),(s))
+#endif
+
+
 /* Constants for MD5Transform routine.
  */
 
