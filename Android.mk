@@ -12,7 +12,7 @@ $(shell cp \
 include $(LOCAL_PATH)/android_libapr.mk
 include $(LOCAL_PATH)/android_libapr-utils.mk
 include $(LOCAL_PATH)/android_libesl.mk
-#include $(LOCAL_PATH)/android_libtpl.mk
+include $(LOCAL_PATH)/android_libtpl.mk
 #include $(LOCAL_PATH)/android_libspandsp.mk
 #include $(LOCAL_PATH)/android_libnatpmp.mk
 #include $(LOCAL_PATH)/android_libminiupnpc.mk
