@@ -711,8 +711,12 @@ SWITCH_DECLARE(int) switch_cache_db_load_extension(switch_cache_db_handle_t *dbh
 	switch (dbh->type) {
 	case SCDB_TYPE_CORE_DB:
 		{
+#ifdef ANDROID
+			switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_ERROR, "load extension not supported by Android!\n");
+#else
 			switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_DEBUG, "try to load extension [%s]!\n", extension);
 			return switch_core_db_load_extension(dbh->native_handle.core_db_dbh, extension);
+#endif
 		}
 		break;
 	case SCDB_TYPE_ODBC:

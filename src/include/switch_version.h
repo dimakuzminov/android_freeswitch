@@ -1,6 +1,6 @@
-/*
+/* 
  * FreeSWITCH Modular Media Switching Software Library / Soft-Switch Application
- * Copyright (C) 2005-2014, Anthony Minessale II <anthm@freeswitch.org>
+ * Copyright (C) 2005/2012, Anthony Minessale II <anthm@freeswitch.org>
  *
  * Version: MPL 1.1
  *
@@ -22,42 +22,37 @@
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
+ * 
+ * Anthony Minessale II <anthm@freeswitch.org>
+ * Michael Jerris <mike@jerris.com>
  *
- *
- * switch_ssl.h
+ * switch_version.h -- Version Number Header
  *
  */
 
-#ifndef __SWITCH_SSL_H
-#define __SWITCH_SSL_H
+#ifndef SWITCH_VERSION_H
+#define SWITCH_VERSION_H
 
-#ifdef ANDROID
-#include "switch_private.h"
+#ifdef __cplusplus
+extern "C" {
 #endif
 
-#if defined(HAVE_OPENSSL)
-#if defined (MACOSX) || defined(DARWIN)
-/* Disable depricated-declarations on OS X */
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-#endif
-#include <openssl/crypto.h>
-#include <openssl/pem.h>
-#include <openssl/conf.h>
-#include <openssl/x509v3.h>
-#ifndef OPENSSL_NO_ENGINE
-#include <openssl/engine.h>
-#endif
-#include <openssl/ssl.h>
-#include <openssl/err.h>
-#include <openssl/bio.h>
-
-SWITCH_DECLARE(int) switch_core_cert_extract_fingerprint(X509* x509, dtls_fingerprint_t *fp);
-
+#if UINTPTR_MAX == 0xffffffffffffffff || defined(_WIN64)
+#define _fs__bits "64bit"
 #else
-static inline int switch_core_cert_extract_fingerprint(void* x509, dtls_fingerprint_t *fp) { return 0; }
+#define _fs__bits "32bit"
 #endif
 
-SWITCH_DECLARE(void) switch_ssl_destroy_ssl_locks(void);
-SWITCH_DECLARE(void) switch_ssl_init_ssl_locks(void);
+#define SWITCH_VERSION_MAJOR			"1"
+#define SWITCH_VERSION_MINOR			"4"
+#define SWITCH_VERSION_MICRO			"15"
+#define SWITCH_VERSION_REVISION			"+git~20141229T185951Z~507a0f22c5" "~" _fs__bits
+#define SWITCH_VERSION_REVISION_HUMAN		"git 507a0f2 2014-12-29 18:59:51Z" " " _fs__bits
+#define SWITCH_VERSION_FULL			SWITCH_VERSION_MAJOR "." SWITCH_VERSION_MINOR "." SWITCH_VERSION_MICRO SWITCH_VERSION_REVISION
+#define SWITCH_VERSION_FULL_HUMAN		SWITCH_VERSION_MAJOR "." SWITCH_VERSION_MINOR "." SWITCH_VERSION_MICRO " " SWITCH_VERSION_REVISION_HUMAN
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

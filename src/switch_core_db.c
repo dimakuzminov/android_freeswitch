@@ -183,6 +183,9 @@ SWITCH_DECLARE(int) switch_core_db_load_extension(switch_core_db_t *db, const ch
 	int ret = 0;
 	char *err = NULL;
 
+#ifdef ANDROID
+    switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_ERROR, "LOAD EXTENSION IS NOT SUPPORTED BY ANDROID\n");
+#else
 	sqlite3_enable_load_extension(db, 1);
 	ret = sqlite3_load_extension(db, extension, 0, &err);
 	sqlite3_enable_load_extension(db, 0);
@@ -192,6 +195,7 @@ SWITCH_DECLARE(int) switch_core_db_load_extension(switch_core_db_t *db, const ch
 		switch_core_db_free(err);
 		err = NULL;
 	}
+#endif
 	return ret;
 }
 

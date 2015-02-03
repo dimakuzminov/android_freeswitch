@@ -20,6 +20,6 @@ include $(LOCAL_PATH)/android_libtpl.mk
 #include $(LOCAL_PATH)/android_libteletone.mk
 #include $(LOCAL_PATH)/android_libiconv.mk
 # include freeswitch executable
-#include $(LOCAL_PATH)/android_freeswitch.mk
+include $(LOCAL_PATH)/android_freeswitch.mk
 # include freeswitch mods
 #include $(LOCAL_PATH)/android_mod_gsmopen.mk

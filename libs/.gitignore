@@ -505,7 +505,6 @@ opal
 /spandsp/src/math_fixed_tables.h
 /spandsp/src/msvc/All/BuildLog make_at_dictionary.htm
 /spandsp/src/msvc/All/BuildLog make_modem_filter.htm
-/spandsp/src/spandsp.h
 /spandsp/src/stamp-h1
 /spandsp/src/t43_gray_code_tables.h
 /spandsp/src/v17_v32bis_rx_fixed_rrc.h
@@ -608,7 +607,6 @@ opal
 /tiff-*/libtiff/stamp-h2
 /tiff-*/libtiff/tif_config.h
 /tiff-*/libtiff/tif_config.h.in
-/tiff-*/libtiff/tiffconf.h
 /tiff-*/m4/libtool.m4
 /tiff-*/m4/lt~obsolete.m4
 /tiff-*/m4/ltoptions.m4
