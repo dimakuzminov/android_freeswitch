@@ -1269,7 +1269,7 @@ APR_DECLARE(int) apr_vformatter(int (*flush_func)(apr_vformatter_buff_t *),
                 break;
             }
 
-            if (prefix_char != NUL && s != S_NULL && s != char_buf) {
+            if (prefix_char != NUL && (s != (char*) S_NULL) && s != char_buf) {
                 *--s = prefix_char;
                 s_len++;
             }

@@ -35,8 +35,6 @@ opal
 /apr/build/pkg/pkginfo
 /apr/exports.c
 /apr/export_vars.c
-/apr/include/apr.h
-/apr/include/arch/unix/apr_private.h
 /apr/include/arch/unix/apr_private.h.in
 /apr/.make.dirs
 /apr/Makefile

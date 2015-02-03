@@ -60,7 +60,7 @@ do_select:
         *len = 0;
         return errno;
     }
-    if ((sock->timeout > 0) && (rv < *len)) {
+    if ((sock->timeout > 0) && ((apr_size_t)rv < *len)) {
         sock->options |= APR_INCOMPLETE_WRITE;
     }
     (*len) = rv;
@@ -99,7 +99,7 @@ do_select:
         (*len) = 0;
         return errno;
     }
-    if ((sock->timeout > 0) && (rv < *len)) {
+    if ((sock->timeout > 0) && ((apr_size_t)rv < *len)) {
         sock->options |= APR_INCOMPLETE_READ;
     }
     (*len) = rv;
@@ -224,7 +224,7 @@ do_select:
         *len = 0;
         return errno;
     }
-    if ((sock->timeout > 0) && (rv < requested_len)) {
+    if ((sock->timeout > 0) && ((apr_size_t)rv < requested_len)) {
         sock->options |= APR_INCOMPLETE_WRITE;
     }
     (*len) = rv;
@@ -314,7 +314,7 @@ apr_status_t apr_socket_sendfile(apr_socket_t *sock, apr_file_t *file,
         for (i = 0; i < hdtr->numheaders; i++) {
             total_hdrbytes += hdtr->headers[i].iov_len;
         }
-        if (hdrbytes < total_hdrbytes) {
+        if (hdrbytes < (apr_size_t)total_hdrbytes) {
             *len = hdrbytes;
             return apr_socket_opt_set(sock, APR_TCP_NOPUSH, 0);
         }
@@ -359,7 +359,7 @@ do_select:
 
     nbytes += rv;
 
-    if (rv < *len) {
+    if ((apr_size_t)rv < *len) {
         *len = nbytes;
         arv = apr_socket_opt_set(sock, APR_TCP_NOPUSH, 0);
         if (rv > 0) {
