@@ -15,7 +15,7 @@ include $(LOCAL_PATH)/android_libesl.mk
 include $(LOCAL_PATH)/android_libtpl.mk
 include $(LOCAL_PATH)/android_libspandsp.mk
 include $(LOCAL_PATH)/android_libnatpmp.mk
-#include $(LOCAL_PATH)/android_libminiupnpc.mk
+include $(LOCAL_PATH)/android_libminiupnpc.mk
 #include $(LOCAL_PATH)/android_libsofia-sip-ua.mk
 #include $(LOCAL_PATH)/android_libteletone.mk
 #include $(LOCAL_PATH)/android_libiconv.mk

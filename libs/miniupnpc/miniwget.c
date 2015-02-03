@@ -33,6 +33,10 @@
 #define MIN(x,y) (((x)<(y))?(x):(y))
 #endif
 
+#ifdef ANDROID
+#define MIN(x,y) (((x)<(y))?(x):(y))
+#endif
+
 #include "miniupnpcstrings.h"
 
 /* miniwget2() :
