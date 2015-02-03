@@ -26,6 +26,9 @@ typedef unsigned __int32 uint32_t;
 #endif
 #include "declspec.h"
 
+#ifdef ANDROID
+#include <arpa/inet.h>
+#endif
 /* getdefaultgateway() :
  * return value :
  *    0 : success
