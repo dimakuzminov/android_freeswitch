@@ -7,6 +7,12 @@ include $(CLEAR_VARS)
 LOCAL_SRC_FILES := \
 	libs/spandsp/src/plc.c \
 	libs/spandsp/src/alloc.c \
+	libs/spandsp/src/dtmf.c \
+	libs/spandsp/src/tone_detect.c \
+	libs/spandsp/src/logging.c \
+	libs/spandsp/src/tone_generate.c \
+	libs/spandsp/src/queue.c \
+	libs/spandsp/src/dds_float.c \
 
 LOCAL_C_INCLUDES += \
 					$(LOCAL_PATH)/src/include \
