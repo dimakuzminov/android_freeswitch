@@ -145,7 +145,7 @@
 #define HAVE_POLL 1
 
 /* Define to 1 if you have the `posix_openpt' function. */
-#define HAVE_POSIX_OPENPT 1
+//#define HAVE_POSIX_OPENPT 1
 
 /* Define to 1 if you have the `pselect' function. */
 #define HAVE_PSELECT 1

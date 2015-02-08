@@ -35,6 +35,10 @@
 #include "udptl.h"
 #include "mod_spandsp_modem.h"
 
+#ifdef ANDROID
+#include <termios.h>
+#endif
+
 #if defined(MODEM_SUPPORT)
 #ifndef WIN32
 #include <poll.h>

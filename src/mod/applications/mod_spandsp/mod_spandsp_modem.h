@@ -57,6 +57,9 @@
 #elif defined(__SunOS)
 #include <termios.h>
 #elif defined(__OpenBSD__)
+#elif defined(ANDROID)
+#include <util.h>
+#include <sys/ioctl.h>
 #else
 #include <pty.h>
 #endif

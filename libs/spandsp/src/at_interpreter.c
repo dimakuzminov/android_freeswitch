@@ -32,6 +32,10 @@
 #include "config.h"
 #endif
 
+#ifdef ANDROID
+#include "config.h"
+#endif
+
 #if defined(__sun)
 #define __EXTENSIONS__
 #endif
