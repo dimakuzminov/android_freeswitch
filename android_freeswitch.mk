@@ -5,58 +5,61 @@ LOCAL_PATH:= $(call my-dir)
 # ========================================================
 include $(CLEAR_VARS)
 LOCAL_SRC_FILES := \
-src/switch_apr.c \
-src/switch_time.c \
-src/switch_core.c \
-src/switch_core_memory.c \
-src/switch_utils.c \
-src/switch_log.c \
-src/switch_core_hash.c \
-src/switch_event.c \
-src/switch_profile.c \
-src/switch_core_session.c \
-src/switch_xml.c \
-src/switch_loadable_module.c \
-src/switch_core_rwlock.c \
-src/switch_channel.c \
-src/switch_core_io.c \
-src/switch_console.c \
-src/switch_mprintf.c \
-src/switch_version.c \
-src/switch_core_cert.c \
-src/switch_core_sqldb.c \
-src/switch_scheduler.c \
-src/switch_rtp.c \
-src/switch_nat.c \
-src/switch_core_media.c \
-src/switch_odbc.c \
-src/switch_pgsql.c \
-src/switch_curl.c \
-src/switch_core_state_machine.c \
-src/switch_regex.c \
-src/switch_core_media_bug.c \
-src/switch_buffer.c \
-src/switch_hashtable.c \
-src/switch_json.c \
-src/switch_ivr_async.c \
-src/switch_core_codec.c \
-src/switch_ivr.c \
-src/switch_resample.c \
-src/switch_ivr_play_say.c \
-src/switch_caller.c \
-src/switch_dso.c \
-src/switch_core_db.c \
-src/switch_stun.c \
-src/switch_stfu.c \
-src/switch_core_port_allocator.c \
-src/switch_core_timer.c \
-src/switch_ivr_bridge.c \
-src/switch_core_asr.c \
-src/switch_core_event_hook.c \
-src/switch_core_file.c \
-src/switch_ivr_say.c \
-src/switch_core_speech.c \
-src/switch_ivr_originate.c \
+	src/switch_apr.c \
+	src/switch_time.c \
+	src/switch_core.c \
+	src/switch_core_memory.c \
+	src/switch_utils.c \
+	src/switch_log.c \
+	src/switch_core_hash.c \
+	src/switch_event.c \
+	src/switch_profile.c \
+	src/switch_core_session.c \
+	src/switch_xml.c \
+	src/switch_loadable_module.c \
+	src/switch_core_rwlock.c \
+	src/switch_channel.c \
+	src/switch_core_io.c \
+	src/switch_console.c \
+	src/switch_mprintf.c \
+	src/switch_version.c \
+	src/switch_core_cert.c \
+	src/switch_core_sqldb.c \
+	src/switch_scheduler.c \
+	src/switch_rtp.c \
+	src/switch_nat.c \
+	src/switch_core_media.c \
+	src/switch_odbc.c \
+	src/switch_pgsql.c \
+	src/switch_curl.c \
+	src/switch_core_state_machine.c \
+	src/switch_regex.c \
+	src/switch_core_media_bug.c \
+	src/switch_buffer.c \
+	src/switch_hashtable.c \
+	src/switch_json.c \
+	src/switch_ivr_async.c \
+	src/switch_core_codec.c \
+	src/switch_ivr.c \
+	src/switch_resample.c \
+	src/switch_ivr_play_say.c \
+	src/switch_caller.c \
+	src/switch_dso.c \
+	src/switch_core_db.c \
+	src/switch_stun.c \
+	src/switch_stfu.c \
+	src/switch_core_port_allocator.c \
+	src/switch_core_timer.c \
+	src/switch_ivr_bridge.c \
+	src/switch_core_asr.c \
+	src/switch_core_event_hook.c \
+	src/switch_core_file.c \
+	src/switch_ivr_say.c \
+	src/switch_core_speech.c \
+	src/switch_ivr_originate.c \
+	src/switch_limit.c \
+	src/switch_xml_config.c \
+	src/switch_ivr_menu.c \
 
 LOCAL_C_INCLUDES += \
 					$(LOCAL_PATH)/src/include \

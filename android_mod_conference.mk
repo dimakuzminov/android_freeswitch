@@ -5,11 +5,7 @@ LOCAL_PATH:= $(call my-dir)
 # ========================================================
 include $(CLEAR_VARS)
 LOCAL_SRC_FILES := \
-	libs/esl/src/esl_json.c \
-	libs/esl/src/esl.c \
-	libs/esl/src/esl_threadmutex.c \
-	libs/esl/src/esl_event.c \
-	libs/esl/src/esl_buffer.c \
+	src/mod/applications/mod_conference/mod_conference.c \
 
 LOCAL_C_INCLUDES += \
 					$(LOCAL_PATH)/src/include \
@@ -27,8 +23,9 @@ LOCAL_C_INCLUDES += \
 					$(LOCAL_PATH)/libs/apr/random/unix \
 					$(LOCAL_PATH)/libs/apr-util/include \
 					$(LOCAL_PATH)/libs/apr-util/include/private \
-					$(LOCAL_PATH)/libs/esl/src/include \
-					$(LOCAL_PATH)/../srtp/crypto/include/ \
+					$(LOCAL_PATH)/libs/libnatpmp/ \
+					$(LOCAL_PATH)/../android_gsmlib/ \
+					$(LOCAL_PATH)/../srtp/crypto/include \
 					$(LOCAL_PATH)/../srtp/include \
 					$(LOCAL_PATH)/../curl/include \
 					$(LOCAL_PATH)/../sqlite/dist \
@@ -37,9 +34,39 @@ LOCAL_C_INCLUDES += \
 					$(LOCAL_PATH)/../regex-re2 \
 					$(LOCAL_PATH)/../regex-re2/util \
 					$(LOCAL_PATH)/../libctb-0.16/include \
-					$(LOCAL_PATH)/..//e2fsprogs/lib \
+					$(LOCAL_PATH)/../e2fsprogs/lib \
+					$(LOCAL_PATH)/../jpeg \
+					$(LOCAL_PATH)/../../prebuilts/ndk/8/sources/cxx-stl/gnu-libstdc++/4.7/include \
+					$(LOCAL_PATH)/../../prebuilts/ndk/8/sources/cxx-stl/gnu-libstdc++/4.7/libs/armeabi-v7a/include \
+					$(LOCAL_PATH)/../../prebuilts/ndk/current/platforms/android-8/arch-arm/usr/include \
+					$(LOCAL_PATH)/../../prebuilts/ndk/8/sources/cxx-stl/gnu-libstdc++/include/backward \
+					$(LOCAL_PATH)/include/ \
+					$(KERNEL_OUT)/usr/include \
 
 LOCAL_MODULE_TAGS := optional
-LOCAL_MODULE := libesl
+LOCAL_MODULE := mod_conference
+
+LOCAL_SHARED_LIBRARIES := \
+	libgsmme \
+	libapr \
+	libapr-utils \
+	libpcre \
+	libext2_uuid \
+	libsqlite \
+	libssl \
+	libssh \
+	libcrypto \
+	libesl \
+	libtpl \
+	libspandsp \
+	libctb \
+	libnatpmp \
+	libminiupnpc \
+	libsofia-sip-ua \
+	libteletone \
+	libspeexresampler \
+	libdl \
+	libfreeswitch \
+	libiconv \
 
 include $(BUILD_SHARED_LIBRARY)

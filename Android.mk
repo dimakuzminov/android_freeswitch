@@ -29,3 +29,12 @@ include $(LOCAL_PATH)/android_mod_enum.mk
 include $(LOCAL_PATH)/android_mod_cdr_csv.mk
 include $(LOCAL_PATH)/android_mod_event_socket.mk
 include $(LOCAL_PATH)/android_mod_sofia.mk
+include $(LOCAL_PATH)/android_mod_loopback.mk
+include $(LOCAL_PATH)/android_mod_commands.mk
+include $(LOCAL_PATH)/android_mod_conference.mk
+include $(LOCAL_PATH)/android_mod_db.mk
+include $(LOCAL_PATH)/android_mod_dptools.mk
+include $(LOCAL_PATH)/android_mod_expr.mk
+include $(LOCAL_PATH)/android_mod_fifo.mk
+include $(LOCAL_PATH)/android_mod_hash.mk
+include $(LOCAL_PATH)/android_mod_voicemail.mk
