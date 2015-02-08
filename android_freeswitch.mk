@@ -60,6 +60,7 @@ LOCAL_SRC_FILES := \
 	src/switch_limit.c \
 	src/switch_xml_config.c \
 	src/switch_ivr_menu.c \
+	src/switch_config.c \
 
 LOCAL_C_INCLUDES += \
 					$(LOCAL_PATH)/src/include \

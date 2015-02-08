@@ -38,3 +38,9 @@ include $(LOCAL_PATH)/android_mod_expr.mk
 include $(LOCAL_PATH)/android_mod_fifo.mk
 include $(LOCAL_PATH)/android_mod_hash.mk
 include $(LOCAL_PATH)/android_mod_voicemail.mk
+include $(LOCAL_PATH)/android_mod_esf.mk
+include $(LOCAL_PATH)/android_mod_fsv.mk
+include $(LOCAL_PATH)/android_mod_valet_parking.mk
+include $(LOCAL_PATH)/android_mod_httapi.mk
+include $(LOCAL_PATH)/android_mod_dialplan_xml.mk
+include $(LOCAL_PATH)/android_mod_dialplan_asterisk.mk
