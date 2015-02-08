@@ -46,3 +46,4 @@ include $(LOCAL_PATH)/android_mod_httapi.mk
 include $(LOCAL_PATH)/android_mod_dialplan_xml.mk
 include $(LOCAL_PATH)/android_mod_dialplan_asterisk.mk
 include $(LOCAL_PATH)/android_mod_spandsp.mk
+include $(LOCAL_PATH)/android_mod_sms.mk
