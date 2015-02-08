@@ -20,6 +20,7 @@ include $(LOCAL_PATH)/android_libminiupnpc.mk
 include $(LOCAL_PATH)/android_libsofia-sip-ua.mk
 include $(LOCAL_PATH)/android_libteletone.mk
 include $(LOCAL_PATH)/android_libiconv.mk
+include $(LOCAL_PATH)/android_libsndfile.mk
 # include freeswitch executable
 include $(LOCAL_PATH)/android_freeswitch.mk
 # include freeswitch mods
@@ -50,3 +51,4 @@ include $(LOCAL_PATH)/android_mod_sms.mk
 include $(LOCAL_PATH)/android_mod_g723_1.mk
 include $(LOCAL_PATH)/android_mod_g729.mk
 include $(LOCAL_PATH)/android_mod_amr.mk
+include $(LOCAL_PATH)/android_mod_sndfile.mk
