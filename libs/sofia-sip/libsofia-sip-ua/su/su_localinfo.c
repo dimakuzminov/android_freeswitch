@@ -617,7 +617,7 @@ int localinfo4(su_localinfo_t const *hints, su_localinfo_t **rresult)
   li_first = (su_localinfo_t *)buffer;
   memset(li_first, 0, sizeof(su_localinfo_t) + su_xtra);
   ifc.ifc_buf = buffer + sizeof(su_localinfo_t) + su_xtra;
-#if HAVE_OPEN_C
+#if defined(HAVE_OPEN_C)&&(!defined(ANDROID))
   if (ioctl(s, SIOCGIFACTIVECONF, (char *)&ifc) < 0) {
     SU_DEBUG_1(("su_localinfo: SIOCGIFCONF failed: %s\n",
 		su_strerror(su_errno())));
@@ -680,7 +680,7 @@ int localinfo4(su_localinfo_t const *hints, su_localinfo_t **rresult)
     SU_DEBUG_9(("su_localinfo: if %s with index %d\n", if_name, if_index));
 
 
-#if HAVE_OPEN_C
+#if defined(HAVE_OPEN_C)&&(!defined(ANDROID))
     su_close(s);
 
     li = calloc(1, sizeof(su_localinfo_t));

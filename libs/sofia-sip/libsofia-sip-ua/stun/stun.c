@@ -58,6 +58,10 @@
 #include <netinet/tcp.h>
 #endif
 
+#ifdef ANDROID
+#include <netinet/tcp.h>
+#endif
+
 #if HAVE_OPENSSL
 #include <openssl/opensslv.h>
 #endif

@@ -40,6 +40,10 @@
 #include <netinet/tcp.h>
 #endif
 
+#ifdef ANDROID
+#include <netinet/tcp.h>
+#endif
+
 #ifndef SOL_TCP
 #define SOL_TCP IPPROTO_TCP
 #endif

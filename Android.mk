@@ -23,3 +23,9 @@ include $(LOCAL_PATH)/android_libiconv.mk
 include $(LOCAL_PATH)/android_freeswitch.mk
 # include freeswitch mods
 include $(LOCAL_PATH)/android_mod_gsmopen.mk
+include $(LOCAL_PATH)/android_mod_console.mk
+include $(LOCAL_PATH)/android_mod_logfile.mk
+include $(LOCAL_PATH)/android_mod_enum.mk
+include $(LOCAL_PATH)/android_mod_cdr_csv.mk
+include $(LOCAL_PATH)/android_mod_event_socket.mk
+include $(LOCAL_PATH)/android_mod_sofia.mk

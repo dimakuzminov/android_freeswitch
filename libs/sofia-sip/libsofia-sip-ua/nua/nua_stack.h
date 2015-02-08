@@ -251,6 +251,9 @@ struct nua_s {
 #define enter (void)SU_DEBUG_9(("nua: %s: entering\n", __FUNCTION__))
 #define nh_enter (void)SU_DEBUG_9(("nua %s(%p): entering\n", __FUNCTION__, nh))
 #define __func__ __FUNCTION__
+#elif ANDROID
+#define enter ((void)0)
+#define nh_enter ((void)0)
 #else
 #define enter ((void)0)
 #define nh_enter ((void)0)

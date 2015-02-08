@@ -102,7 +102,7 @@ su_socket_t su_socket(int af, int socktype, int proto)
       su_setblocking(s, 0);
   }
 
-#if HAVE_OPEN_C
+#if defined(HAVE_OPEN_C)&&(!defined(ANDROID))
   /* Use AP we have raised up */
   memset(&ifr, 0, sizeof(struct ifreq));
   strncpy(ifr.ifr_name, (char const *) su_global_ap_name, IFNAMSIZ);
@@ -227,7 +227,7 @@ int su_init(void)
   signal(SIGPIPE, SIG_IGN);	/* we want to get EPIPE instead */
 #endif
 
-#if HAVE_OPEN_C
+#if defined(HAVE_OPEN_C)&&(!defined(ANDROID))
   /* This code takes care of enabling an access point (interface) */
   aConnection = su_localinfo_ap_set(su_ap, &ifindex);
   su_localinfo_ap_name_to_index(ifindex);
@@ -242,7 +242,7 @@ int su_init(void)
 /** Deinitialize socket implementation. */
 void su_deinit(void)
 {
-#if HAVE_OPEN_C
+#if defined(HAVE_OPEN_C)&&(!defined(ANDROID))
 	su_localinfo_ap_deinit(aConnection);
 #endif
 }
@@ -374,7 +374,7 @@ issize_t su_getmsgsize(su_socket_t s)
     return -1;
   return (issize_t)n;
 }
-#elif HAVE_OPEN_C
+#elif defined(HAVE_OPEN_C)&&(!defined(ANDROID))
 issize_t su_getmsgsize(su_socket_t s)
 {
   int n = -1;

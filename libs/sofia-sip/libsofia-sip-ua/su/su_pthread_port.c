@@ -240,7 +240,7 @@ int su_pthreaded_port_start(su_port_create_f *create,
     /* init: */   NULL,
     /* deinit: */ NULL,
     /* mutex: */  { PTHREAD_MUTEX_INITIALIZER },
-#if HAVE_OPEN_C
+#if defined(HAVE_OPEN_C)&&(!defined(ANDROID))
 /* cv: */     { _ENeedsNormalInit, NULL },
 #else
     /* cv: */     { PTHREAD_COND_INITIALIZER },
@@ -500,7 +500,7 @@ int su_pthread_port_execute(su_task_r const task,
 {
   int success;
   su_msg_r m = SU_MSG_R_INIT;
-#if HAVE_OPEN_C
+#if defined(HAVE_OPEN_C)&&(!defined(ANDROID))
   struct su_pthread_port_execute frame = {
     { PTHREAD_MUTEX_INITIALIZER },
     { _ENeedsNormalInit, NULL },

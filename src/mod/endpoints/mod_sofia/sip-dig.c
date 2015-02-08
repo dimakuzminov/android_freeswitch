@@ -134,7 +134,11 @@
 
 #include "switch.h"
 #ifndef WIN32
+#ifdef ANDROID
+#include "config.h"
+#else
 #include "../../config.h"
+#endif
 #endif
 
 #include "sofia-sip/su.h"

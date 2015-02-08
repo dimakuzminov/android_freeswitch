@@ -61,7 +61,7 @@
 //#define SU_HAVE_IN6 1
 
 /** Define as 1 if you have sa_len field in struct sockaddr */
-#define SU_HAVE_SOCKADDR_SA_LEN 1
+#define SU_HAVE_SOCKADDR_SA_LEN 0
 
 /** Define as 1 if you have struct sockaddr_storage */
 #define SU_HAVE_SOCKADDR_STORAGE 1

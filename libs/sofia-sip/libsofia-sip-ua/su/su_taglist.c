@@ -59,9 +59,11 @@
 #include <sofia-sip/su_tagarg.h>
 #include <sofia-sip/su_string.h>
 
+#ifndef ANDROID
 #ifndef HAVE_STRTOULL
 #if !((defined(WIN32) || defined(_WIN32)) && (_MSC_VER >= 1800))
 unsigned longlong strtoull(const char *, char **, int);
+#endif
 #endif
 #endif
 

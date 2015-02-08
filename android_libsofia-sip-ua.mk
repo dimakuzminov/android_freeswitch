@@ -9,6 +9,145 @@ LOCAL_SRC_FILES := \
 	libs/sofia-sip/libsofia-sip-ua/su/su_alloc.c \
 	libs/sofia-sip/libsofia-sip-ua/su/su_string.c \
 	libs/sofia-sip/libsofia-sip-ua/su/su_errno.c \
+	libs/sofia-sip/libsofia-sip-ua/nua/nua.c \
+	libs/sofia-sip/libsofia-sip-ua/nua/nua_stack.c \
+	libs/sofia-sip/libsofia-sip-ua/nua/nua_common.c \
+	libs/sofia-sip/libsofia-sip-ua/su/su_default_log.c \
+	libs/sofia-sip/libsofia-sip-ua/su/su_alloc_lock.c \
+	libs/sofia-sip/libsofia-sip-ua/su/su_root.c \
+	libs/sofia-sip/libsofia-sip-ua/su/su_taglist.c \
+	libs/sofia-sip/libsofia-sip-ua/su/su_port.c \
+	libs/sofia-sip/libsofia-sip-ua/su/su_log.c \
+	libs/sofia-sip/libsofia-sip-ua/msg/msg.c \
+	libs/sofia-sip/libsofia-sip-ua/su/su_timer.c \
+	libs/sofia-sip/libsofia-sip-ua/nta/nta.c \
+	libs/sofia-sip/libsofia-sip-ua/nea/nea_server.c \
+	libs/sofia-sip/libsofia-sip-ua/nua/nua_client.c \
+	libs/sofia-sip/libsofia-sip-ua/nua/nua_server.c \
+	libs/sofia-sip/libsofia-sip-ua/nua/nua_dialog.c \
+	libs/sofia-sip/libsofia-sip-ua/soa/soa.c \
+	libs/sofia-sip/libsofia-sip-ua/nua/nua_event_server.c \
+	libs/sofia-sip/libsofia-sip-ua/sip/sip_time.c \
+	libs/sofia-sip/libsofia-sip-ua/nea/nea_tag.c \
+	libs/sofia-sip/libsofia-sip-ua/nua/nua_params.c \
+	libs/sofia-sip/libsofia-sip-ua/msg/msg_header_make.c \
+	libs/sofia-sip/libsofia-sip-ua/nua/nua_register.c \
+	libs/sofia-sip/libsofia-sip-ua/sip/sip_basic.c \
+	libs/sofia-sip/libsofia-sip-ua/nua/nua_session.c \
+	libs/sofia-sip/libsofia-sip-ua/nua/nua_options.c \
+	libs/sofia-sip/libsofia-sip-ua/nua/nua_subnotref.c \
+	libs/sofia-sip/libsofia-sip-ua/nua/nua_publish.c \
+	libs/sofia-sip/libsofia-sip-ua/nua/nua_message.c \
+	libs/sofia-sip/libsofia-sip-ua/su/su_global_log.c \
+	libs/sofia-sip/libsofia-sip-ua/su/su_time.c \
+	libs/sofia-sip/libsofia-sip-ua/su/su_poll_port.c \
+	libs/sofia-sip/libsofia-sip-ua/su/su_select_port.c \
+	libs/sofia-sip/libsofia-sip-ua/su/su_uniqueid.c \
+	libs/sofia-sip/libsofia-sip-ua/su/su_strdup.c \
+	libs/sofia-sip/libsofia-sip-ua/su/su_md5.c \
+	libs/sofia-sip/libsofia-sip-ua/su/su_base_port.c \
+	libs/sofia-sip/libsofia-sip-ua/su/smoothsort.c \
+	libs/sofia-sip/libsofia-sip-ua/url/url.c \
+	libs/sofia-sip/libsofia-sip-ua/msg/msg_parser_util.c \
+	libs/sofia-sip/libsofia-sip-ua/su/su_sprintf.c \
+	libs/sofia-sip/libsofia-sip-ua/tport/tport.c \
+	libs/sofia-sip/libsofia-sip-ua/nua/nua_extension.c \
+	libs/sofia-sip/libsofia-sip-ua/msg/msg_parser.c \
+	libs/sofia-sip/libsofia-sip-ua/sip/sip_parser.c \
+	libs/sofia-sip/libsofia-sip-ua/sresolv/sres.c \
+	libs/sofia-sip/libsofia-sip-ua/msg/msg_header_copy.c \
+	libs/sofia-sip/libsofia-sip-ua/bnf/bnf.c \
+	libs/sofia-sip/libsofia-sip-ua/tport/tport_tag.c \
+	libs/sofia-sip/libsofia-sip-ua/su/su_time0.c \
+	libs/sofia-sip/libsofia-sip-ua/sip/sip_refer.c \
+	libs/sofia-sip/libsofia-sip-ua/sip/sip_extra.c \
+	libs/sofia-sip/libsofia-sip-ua/sip/sip_feature.c \
+	libs/sofia-sip/libsofia-sip-ua/sip/sip_header.c \
+	libs/sofia-sip/libsofia-sip-ua/sip/sip_prack.c \
+	libs/sofia-sip/libsofia-sip-ua/sip/sip_status.c \
+	libs/sofia-sip/libsofia-sip-ua/sip/sip_util.c \
+	libs/sofia-sip/libsofia-sip-ua/msg/msg_generic.c \
+	libs/sofia-sip/libsofia-sip-ua/sip/sip_event.c \
+	libs/sofia-sip/libsofia-sip-ua/sip/sip_tag_class.c \
+	libs/sofia-sip/libsofia-sip-ua/sip/sip_mime.c \
+	libs/sofia-sip/libsofia-sip-ua/msg/msg_mime.c \
+	libs/sofia-sip/libsofia-sip-ua/msg/msg_basic.c \
+	libs/sofia-sip/libsofia-sip-ua/msg/msg_mime_table.c \
+	libs/sofia-sip/libsofia-sip-ua/nta/nta_tag_ref.c \
+	libs/sofia-sip/libsofia-sip-ua/nta/nta_tag.c \
+	libs/sofia-sip/libsofia-sip-ua/tport/tport_tag_ref.c \
+	libs/sofia-sip/libsofia-sip-ua/url/url_tag_ref.c \
+	libs/sofia-sip/libsofia-sip-ua/sip/sip_tag_ref.c \
+	libs/sofia-sip/libsofia-sip-ua/sresolv/sresolv.c \
+	libs/sofia-sip/libsofia-sip-ua/tport/tport_stub_sigcomp.c \
+	libs/sofia-sip/libsofia-sip-ua/tport/tport_logging.c \
+	libs/sofia-sip/libsofia-sip-ua/nea/nea_debug.c \
+	libs/sofia-sip/libsofia-sip-ua/iptsec/iptsec_debug.c \
+	libs/sofia-sip/libsofia-sip-ua/nua/nua_notifier.c \
+	libs/sofia-sip/libsofia-sip-ua/sip/sip_tag.c \
+	libs/sofia-sip/libsofia-sip-ua/nua/nua_tag.c \
+	libs/sofia-sip/libsofia-sip-ua/tport/tport_stub_stun.c \
+	libs/sofia-sip/libsofia-sip-ua/nea/nea_tag_ref.c \
+	libs/sofia-sip/libsofia-sip-ua/url/url_tag.c \
+	libs/sofia-sip/libsofia-sip-ua/iptsec/auth_client.c \
+	libs/sofia-sip/libsofia-sip-ua/sip/sip_security.c \
+	libs/sofia-sip/libsofia-sip-ua/nta/nta_check.c \
+	libs/sofia-sip/libsofia-sip-ua/sdp/sdp.c \
+	libs/sofia-sip/libsofia-sip-ua/soa/soa_static.c \
+	libs/sofia-sip/libsofia-sip-ua/soa/soa_tag.c \
+	libs/sofia-sip/libsofia-sip-ua/sdp/sdp_print.c \
+	libs/sofia-sip/libsofia-sip-ua/soa/soa_tag_ref.c \
+	libs/sofia-sip/libsofia-sip-ua/su/su_localinfo.c \
+	libs/sofia-sip/libsofia-sip-ua/nua/nua_tag_ref.c \
+	libs/sofia-sip/libsofia-sip-ua/msg/msg_date.c \
+	libs/sofia-sip/libsofia-sip-ua/nua/outbound.c \
+	libs/sofia-sip/libsofia-sip-ua/su/su_strlst.c \
+	libs/sofia-sip/libsofia-sip-ua/su/su_os_nw.c \
+	libs/sofia-sip/libsofia-sip-ua/stun/stun.c \
+	libs/sofia-sip/libsofia-sip-ua/sip/sip_session.c \
+	libs/sofia-sip/libsofia-sip-ua/sip/sip_caller_prefs.c \
+	libs/sofia-sip/libsofia-sip-ua/su/su_wait.c \
+	libs/sofia-sip/libsofia-sip-ua/su/su_socket_port.c \
+	libs/sofia-sip/libsofia-sip-ua/su/su_pthread_port.c \
+	libs/sofia-sip/libsofia-sip-ua/su/su_addrinfo.c \
+	libs/sofia-sip/libsofia-sip-ua/su/su.c \
+	libs/sofia-sip/libsofia-sip-ua/tport/tport_type_udp.c \
+	libs/sofia-sip/libsofia-sip-ua/nua/nua_registrar.c \
+	libs/sofia-sip/libsofia-sip-ua/tport/tport_type_tcp.c \
+	libs/sofia-sip/libsofia-sip-ua/tport/tport_type_stun.c \
+	libs/sofia-sip/libsofia-sip-ua/msg/msg_mclass.c \
+	libs/sofia-sip/libsofia-sip-ua/sip/sip_parser_table.c \
+	libs/sofia-sip/libsofia-sip-ua/sresolv/sres_cache.c \
+	libs/sofia-sip/libsofia-sip-ua/msg/msg_tag.c \
+	libs/sofia-sip/libsofia-sip-ua/sip/sip_reason.c \
+	libs/sofia-sip/libsofia-sip-ua/stun/stun_mini.c \
+	libs/sofia-sip/libsofia-sip-ua/ipt/base64.c \
+	libs/sofia-sip/libsofia-sip-ua/iptsec/auth_common.c \
+	libs/sofia-sip/libsofia-sip-ua/iptsec/auth_digest.c \
+	libs/sofia-sip/libsofia-sip-ua/msg/msg_auth.c \
+	libs/sofia-sip/libsofia-sip-ua/ipt/token64.c \
+	libs/sofia-sip/libsofia-sip-ua/stun/stun_common.c \
+	libs/sofia-sip/libsofia-sip-ua/stun/stun_dns.c \
+	libs/sofia-sip/libsofia-sip-ua/stun/stun_tag.c \
+	libs/sofia-sip/libsofia-sip-ua/stun/stun_tag_ref.c \
+	libs/sofia-sip/libsofia-sip-ua/sip/sip_pref_util.c \
+	libs/sofia-sip/libsofia-sip-ua/nth/nth_server.c \
+	libs/sofia-sip/libsofia-sip-ua/http/http_tag_class.c \
+	libs/sofia-sip/libsofia-sip-ua/http/http_status.c \
+	libs/sofia-sip/libsofia-sip-ua/http/http_parser.c \
+	libs/sofia-sip/libsofia-sip-ua/http/http_basic.c \
+	libs/sofia-sip/libsofia-sip-ua/http/http_tag.c \
+	libs/sofia-sip/libsofia-sip-ua/iptsec/auth_module.c \
+	libs/sofia-sip/libsofia-sip-ua/nth/nth_tag_ref.c \
+	libs/sofia-sip/libsofia-sip-ua/iptsec/auth_tag_ref.c \
+	libs/sofia-sip/libsofia-sip-ua/iptsec/auth_tag.c \
+	libs/sofia-sip/libsofia-sip-ua/http/http_extra.c \
+	libs/sofia-sip/libsofia-sip-ua/nth/nth_tag.c \
+	libs/sofia-sip/libsofia-sip-ua/http/http_tag_ref.c \
+	libs/sofia-sip/libsofia-sip-ua/http/http_header.c \
+	libs/sofia-sip/libsofia-sip-ua/http/http_parser_table.c \
+	libs/sofia-sip/libsofia-sip-ua/nth/nth_client.c \
+	libs/sofia-sip/libsofia-sip-ua/sresolv/sres_blocking.c \
 
 LOCAL_C_INCLUDES += \
 					$(LOCAL_PATH)/src/include \
@@ -17,8 +156,23 @@ LOCAL_C_INCLUDES += \
 					$(LOCAL_PATH)/libs/tiff-4.0.2/libtiff \
 					$(LOCAL_PATH)/libs/apr/include \
 					$(LOCAL_PATH)/libs/apr-util/include \
+					$(LOCAL_PATH)/libs/sofia-sip/libsofia-sip-ua/url \
 					$(LOCAL_PATH)/libs/sofia-sip/libsofia-sip-ua/sdp \
 					$(LOCAL_PATH)/libs/sofia-sip/libsofia-sip-ua/su \
+					$(LOCAL_PATH)/libs/sofia-sip/libsofia-sip-ua/nua \
+					$(LOCAL_PATH)/libs/sofia-sip/libsofia-sip-ua/sip \
+					$(LOCAL_PATH)/libs/sofia-sip/libsofia-sip-ua/msg \
+					$(LOCAL_PATH)/libs/sofia-sip/libsofia-sip-ua/nta \
+					$(LOCAL_PATH)/libs/sofia-sip/libsofia-sip-ua/nea \
+					$(LOCAL_PATH)/libs/sofia-sip/libsofia-sip-ua/soa \
+					$(LOCAL_PATH)/libs/sofia-sip/libsofia-sip-ua/iptsec \
+					$(LOCAL_PATH)/libs/sofia-sip/libsofia-sip-ua/tport \
+					$(LOCAL_PATH)/libs/sofia-sip/libsofia-sip-ua/bnf \
+					$(LOCAL_PATH)/libs/sofia-sip/libsofia-sip-ua/ipt \
+					$(LOCAL_PATH)/libs/sofia-sip/libsofia-sip-ua/sresolv \
+					$(LOCAL_PATH)/libs/sofia-sip/libsofia-sip-ua/stun \
+					$(LOCAL_PATH)/libs/sofia-sip/libsofia-sip-ua/http \
+					$(LOCAL_PATH)/libs/sofia-sip/libsofia-sip-ua/nth \
 					$(LOCAL_PATH)/libs/sofia-sip/open_c \
 					$(LOCAL_PATH)/libs/libtpl-1.5/src \
 					$(LOCAL_PATH)/libs/apr/include/arch/unix \
@@ -39,5 +193,27 @@ LOCAL_C_INCLUDES += \
 
 LOCAL_MODULE_TAGS := optional
 LOCAL_MODULE := libsofia-sip-ua
+
+LOCAL_SHARED_LIBRARIES := \
+	libgsmme \
+	libapr \
+	libapr-utils \
+	libpcre \
+	libext2_uuid \
+	libsqlite \
+	libssl \
+	libssh \
+	libcrypto \
+	libesl \
+	libtpl \
+	libspandsp \
+	libctb \
+	libnatpmp \
+	libminiupnpc \
+	libsofia-sip-ua \
+	libteletone \
+	libspeexresampler \
+	libdl \
+	libfreeswitch \
 
 include $(BUILD_SHARED_LIBRARY)
