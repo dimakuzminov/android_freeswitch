@@ -10,6 +10,7 @@ LOCAL_SRC_FILES := \
 	libs/libiconv-1.14/lib/relocatable.c \
 
 LOCAL_C_INCLUDES += \
+					$(LOCAL_PATH)/libs/libiconv-1.14 \
 					$(LOCAL_PATH)/libs/libiconv-1.14/libcharset \
 					$(LOCAL_PATH)/src/include \
 					$(LOCAL_PATH)/libs/spandsp/src \
@@ -44,7 +45,8 @@ LOCAL_CFLAGS := \
   -DANDROID \
   -DLIBDIR=\"/system/lib/\" \
   -DBUILDING_LIBICONV \
-  -DIN_LIBRARY
+  -DIN_LIBRARY \
+  -DLIBICONV_PLUG \
 
 LOCAL_MODULE_TAGS := optional
 LOCAL_MODULE := libiconv
