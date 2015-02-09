@@ -56,3 +56,4 @@ include $(LOCAL_PATH)/android_mod_native_file.mk
 include $(LOCAL_PATH)/android_mod_local_stream.mk
 include $(LOCAL_PATH)/android_mod_tone_stream.mk
 include $(LOCAL_PATH)/android_mod_say_en.mk
+include $(LOCAL_PATH)/android_mod_lua.mk

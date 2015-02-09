@@ -5,6 +5,7 @@ LOCAL_PATH:= $(call my-dir)
 # ========================================================
 include $(CLEAR_VARS)
 LOCAL_SRC_FILES := \
+	src/switch_cpp.cpp \
 	src/switch_apr.c \
 	src/switch_time.c \
 	src/switch_core.c \
