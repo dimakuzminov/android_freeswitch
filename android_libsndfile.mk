@@ -1,7 +1,7 @@
 LOCAL_PATH:= $(call my-dir)
 
 # ========================================================
-# switch_apr shared library
+# sndfile shared library
 # ========================================================
 include $(CLEAR_VARS)
 LOCAL_SRC_FILES := \
@@ -113,7 +113,7 @@ LOCAL_C_INCLUDES += \
 					$(LOCAL_PATH)/../regex-re2 \
 					$(LOCAL_PATH)/../regex-re2/util \
 					$(LOCAL_PATH)/../libctb-0.16/include \
-					$(LOCAL_PATH)/..//e2fsprogs/lib \
+					$(LOCAL_PATH)/../e2fsprogs/lib \
 					$(LOCAL_PATH)/../jpeg \
 
 LOCAL_MODULE_TAGS := optional

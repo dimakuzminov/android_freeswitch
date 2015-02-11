@@ -1,7 +1,7 @@
 LOCAL_PATH:= $(call my-dir)
 
 # ========================================================
-# switch_apr shared library
+# sofia-sip-ua shared library
 # ========================================================
 include $(CLEAR_VARS)
 LOCAL_SRC_FILES := \
@@ -189,31 +189,15 @@ LOCAL_C_INCLUDES += \
 					$(LOCAL_PATH)/../regex-re2 \
 					$(LOCAL_PATH)/../regex-re2/util \
 					$(LOCAL_PATH)/../libctb-0.16/include \
-					$(LOCAL_PATH)/..//e2fsprogs/lib \
+					$(LOCAL_PATH)/../e2fsprogs/lib \
 
 LOCAL_MODULE_TAGS := optional
 LOCAL_MODULE := libsofia-sip-ua
 
 LOCAL_SHARED_LIBRARIES := \
-	libgsmme \
-	libapr \
-	libapr-utils \
-	libpcre \
-	libext2_uuid \
-	libsqlite \
 	libssl \
 	libssh \
 	libcrypto \
-	libesl \
-	libtpl \
-	libspandsp \
-	libctb \
-	libnatpmp \
-	libminiupnpc \
-	libsofia-sip-ua \
-	libteletone \
-	libspeexresampler \
 	libdl \
-	libfreeswitch \
 
 include $(BUILD_SHARED_LIBRARY)

@@ -8,6 +8,14 @@ $(shell cp \
 	$(TARGET_OUT_SHARED_LIBRARIES)/ \
 )
 
+# ========================================================
+# setup required folder structure and copy configuration
+# files
+# ========================================================
+$(shell mkdir -p $(TARGET_OUT)/system/opt/freeswitch)
+$(shell cp -a $(LOCAL_PATH)/netline/conf $(TARGET_OUT)/system/opt/freeswitch/)
+$(shell cp -a $(LOCAL_PATH)/netline/scripts $(TARGET_OUT)/system/opt/freeswitch/)
+
 # include libs
 include $(LOCAL_PATH)/android_libapr.mk
 include $(LOCAL_PATH)/android_libapr-utils.mk

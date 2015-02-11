@@ -1,7 +1,7 @@
 LOCAL_PATH:= $(call my-dir)
 
 # ========================================================
-# switch_apr shared library
+# mod_cdr_csv loadable shared library
 # ========================================================
 include $(CLEAR_VARS)
 LOCAL_SRC_FILES := \
@@ -36,37 +36,12 @@ LOCAL_C_INCLUDES += \
 					$(LOCAL_PATH)/../libctb-0.16/include \
 					$(LOCAL_PATH)/../e2fsprogs/lib \
 					$(LOCAL_PATH)/../jpeg \
-					$(LOCAL_PATH)/../../prebuilts/ndk/8/sources/cxx-stl/gnu-libstdc++/4.7/include \
-					$(LOCAL_PATH)/../../prebuilts/ndk/8/sources/cxx-stl/gnu-libstdc++/4.7/libs/armeabi-v7a/include \
-					$(LOCAL_PATH)/../../prebuilts/ndk/current/platforms/android-8/arch-arm/usr/include \
-					$(LOCAL_PATH)/../../prebuilts/ndk/8/sources/cxx-stl/gnu-libstdc++/include/backward \
 					$(LOCAL_PATH)/include/ \
-					$(KERNEL_OUT)/usr/include \
 
 LOCAL_MODULE_TAGS := optional
 LOCAL_MODULE := mod_cdr_csv
 
 LOCAL_SHARED_LIBRARIES := \
-	libgsmme \
-	libapr \
-	libapr-utils \
-	libpcre \
-	libext2_uuid \
-	libsqlite \
-	libssl \
-	libssh \
-	libcrypto \
-	libesl \
-	libtpl \
-	libspandsp \
-	libctb \
-	libnatpmp \
-	libminiupnpc \
-	libsofia-sip-ua \
-	libteletone \
-	libspeexresampler \
-	libdl \
 	libfreeswitch \
-	libiconv \
 
 include $(BUILD_SHARED_LIBRARY)

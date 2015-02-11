@@ -1,7 +1,7 @@
 LOCAL_PATH:= $(call my-dir)
 
 # ========================================================
-# switch_apr shared library
+# mod_spandsp loadable shared library
 # ========================================================
 include $(CLEAR_VARS)
 LOCAL_SRC_FILES := \
@@ -45,26 +45,7 @@ LOCAL_MODULE_TAGS := optional
 LOCAL_MODULE := mod_spandsp
 
 LOCAL_SHARED_LIBRARIES := \
-	libgsmme \
-	libapr \
-	libapr-utils \
-	libpcre \
-	libext2_uuid \
-	libsqlite \
-	libssl \
-	libssh \
-	libcrypto \
-	libesl \
-	libtpl \
 	libspandsp \
-	libctb \
-	libnatpmp \
-	libminiupnpc \
-	libsofia-sip-ua \
-	libteletone \
-	libspeexresampler \
-	libdl \
 	libfreeswitch \
-	libiconv \
 
 include $(BUILD_SHARED_LIBRARY)

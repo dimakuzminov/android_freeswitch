@@ -50,25 +50,9 @@ LOCAL_MODULE_TAGS := optional
 LOCAL_MODULE := mod_gsmopen
 LOCAL_SHARED_LIBRARIES := \
 	libgsmme \
-	libapr \
-	libapr-utils \
-	libpcre \
-	libext2_uuid \
-	libsqlite \
-	libssl \
-	libssh \
-	libcrypto \
-	libesl \
-	libtpl \
 	libspandsp \
-	libctb \
-	libnatpmp \
-	libminiupnpc \
-	libsofia-sip-ua \
-	libteletone \
-	libspeexresampler \
-	libdl \
 	libfreeswitch \
 	libiconv \
+	libctb \
 
 include $(BUILD_SHARED_LIBRARY)

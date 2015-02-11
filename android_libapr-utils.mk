@@ -1,7 +1,7 @@
 LOCAL_PATH:= $(call my-dir)
 
 # ========================================================
-# switch_apr shared library
+# apr-utils shared library
 # ========================================================
 include $(CLEAR_VARS)
 LOCAL_SRC_FILES := \

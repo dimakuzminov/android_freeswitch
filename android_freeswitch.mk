@@ -1,7 +1,7 @@
 LOCAL_PATH:= $(call my-dir)
 
 # ========================================================
-# switch shared library
+# switch core shared library
 # ========================================================
 include $(CLEAR_VARS)
 LOCAL_SRC_FILES := \
@@ -113,7 +113,6 @@ LOCAL_SHARED_LIBRARIES := \
 	libteletone \
 	libspeexresampler \
 	libdl \
-	libfreeswitch \
 
 LOCAL_STATIC_LIBRARIES := \
 	libcurl \
@@ -121,6 +120,9 @@ LOCAL_STATIC_LIBRARIES := \
 
 include $(BUILD_SHARED_LIBRARY)
 
+# ========================================================
+# switch executable
+# ========================================================
 include $(CLEAR_VARS)
 LOCAL_SRC_FILES := \
 	src/switch.c \

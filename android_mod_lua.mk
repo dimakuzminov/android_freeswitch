@@ -1,7 +1,7 @@
 LOCAL_PATH:= $(call my-dir)
 
 # ========================================================
-# switch_apr shared library
+# mod_lua loadable shared library
 # ========================================================
 
 include $(CLEAR_VARS)
