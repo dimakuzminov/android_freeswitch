@@ -1,0 +1,8 @@
+<include>
+ <!-- dial number via gsmopen using interface1 interface to go out -->
+    <extension name="gsmopen">
+      <condition field="destination_number" expression="^05(\d{8})$">
+        <action application="bridge" data="gsmopen/RR/${destination_number}"/>
+      </condition>
+    </extension>
+</include>

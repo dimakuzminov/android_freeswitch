@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    NOTICE:
+    
+    This context is usually accessed via authenticated callers on the sip profile on port 5060 
+    or transfered callers from the public context which arrived via the sip profile on port 5080.
+    
+    Authenticated users will use the user_context variable on the user to determine what context
+    they can access.  You can also add a user in the directory with the cidr= attribute acl.conf.xml
+    will build the domains ACL using this value.
+-->
+<!-- http://wiki.freeswitch.org/wiki/Dialplan_XML -->
+<include>
+  <context name="default">
+
+    <extension name="unloop">
+      <condition field="${unroll_loops}" expression="^true$"/>
+      <condition field="${sip_looped_call}" expression="^true$">
+	<action application="deflect" data="${destination_number}"/>
+      </condition>
+    </extension>
+
+    <condition field="${default_password}" expression="^1234$" break="never">
+	<action application="log" data="CRIT WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING "/>
+	<action application="log" data="CRIT Open ${base_dir}/conf/vars.xml and change the default_password."/>
+	<action application="log" data="CRIT Once changed type 'reloadxml' at the console."/>
+	<action application="log" data="CRIT WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING "/>
+	<action application="sleep" data="10000"/>
+      </condition>
+      
+      <condition field="${rtp_has_crypto}" expression="^($${rtp_sdes_suites})$" break="never">
+	<action application="set" data="rtp_secure_media=true"/>
+	<!-- Offer SRTP on outbound legs if we have it on inbound. -->
+	<!-- <action application="export" data="rtp_secure_media=true"/> -->
+      </condition>
+
+      <!--
+	 Since we have inbound-late-negotation on by default now the
+	 above behavior isn't the same so you have to do one extra step.
+	-->
+      <condition field="${endpoint_disposition}" expression="^(DELAYED NEGOTIATION)"/>
+      <condition field="${switch_r_sdp}" expression="(AES_CM_128_HMAC_SHA1_32|AES_CM_128_HMAC_SHA1_80)" break="never">
+	<action application="set" data="rtp_secure_media=true"/>
+	<!-- Offer SRTP on outbound legs if we have it on inbound. -->
+	<!-- <action application="export" data="rtp_secure_media=true"/> -->
+      </condition>
+
+    <!-- If sip_req_host is not a local domain then this has to be an external sip uri -->
+    <!--
+    <extension name="external_sip_uri" continue="true">
+      <condition field="source" expression="mod_sofia"/>
+      <condition field="${outside_call}" expression="^$"/>
+      <condition field="${domain_exists(${sip_req_host})}" expression="true">
+	<anti-action application="bridge" data="sofia/${use_profile}/${sip_to_uri}"/>
+      </condition>
+    </extension>
+    -->
+    
+
+    <!--	
+    <extension name="eavesdrop">
+      <condition field="destination_number" expression="^88(\d{4})$|^\*0(.*)$">
+	<action application="answer"/>
+	<action application="eavesdrop" data="${hash(select/${domain_name}-spymap/$1$2)}"/>
+      </condition>
+    </extension>
+
+    <extension name="eavesdrop">
+      <condition field="destination_number" expression="^779$">
+	<action application="answer"/>
+	<action application="set" data="eavesdrop_indicate_failed=tone_stream://%(500, 0, 320)"/>
+	<action application="set" data="eavesdrop_indicate_new=tone_stream://%(500, 0, 620)"/>
+	<action application="set" data="eavesdrop_indicate_idle=tone_stream://%(250, 0, 920)"/>
+	<action application="eavesdrop" data="all"/>
+      </condition>
+    </extension>
+
+    -->
+    <!-- 
+	 dial the extension (1000-1019) for 30 seconds and go to voicemail if the 
+	 call fails (continue_on_fail=true), otherwise hang up after a successful
+	 bridge (hangup_after_bridge=true) 
+    -->
+    <extension name="Local_Extension">
+      <condition field="destination_number" expression="^(10[01][0-9])$">
+	<action application="export" data="dialed_extension=$1"/>
+	<!-- bind_meta_app can have these args <key> [a|b|ab] [a|b|o|s] <app> -->
+	<action application="bind_meta_app" data="1 b s execute_extension::dx XML features"/>
+	<action application="bind_meta_app" data="2 b s record_session::$${recordings_dir}/${caller_id_number}.${strftime(%Y-%m-%d-%H-%M-%S)}.wav"/>
+	<action application="bind_meta_app" data="3 b s execute_extension::cf XML features"/>
+	<action application="bind_meta_app" data="4 b s execute_extension::att_xfer XML features"/>
+	<action application="set" data="ringback=${us-ring}"/>
+	<action application="set" data="transfer_ringback=$${hold_music}"/>
+	<action application="set" data="call_timeout=30"/>
+	<!-- <action application="set" data="sip_exclude_contact=${network_addr}"/> -->
+	<action application="set" data="hangup_after_bridge=true"/>
+	<!--<action application="set" data="continue_on_fail=NORMAL_TEMPORARY_FAILURE,USER_BUSY,NO_ANSWER,TIMEOUT,NO_ROUTE_DESTINATION"/> -->
+	<action application="set" data="continue_on_fail=true"/>
+	<action application="hash" data="insert/${domain_name}-call_return/${dialed_extension}/${caller_id_number}"/>
+	<action application="hash" data="insert/${domain_name}-last_dial_ext/${dialed_extension}/${uuid}"/>
+	<action application="set" data="called_party_callgroup=${user_data(${dialed_extension}@${domain_name} var callgroup)}"/>
+	<action application="hash" data="insert/${domain_name}-last_dial_ext/${called_party_callgroup}/${uuid}"/>
+	<action application="hash" data="insert/${domain_name}-last_dial_ext/global/${uuid}"/>
+	<!--<action application="export" data="nolocal:rtp_secure_media=${user_data(${dialed_extension}@${domain_name} var rtp_secure_media)}"/>-->
+	<action application="hash" data="insert/${domain_name}-last_dial/${called_party_callgroup}/${uuid}"/>
+	<action application="bridge" data="user/${dialed_extension}@${domain_name}"/>
+	<action application="answer"/>
+	<action application="sleep" data="1000"/>
+	<action application="bridge" data="loopback/app=voicemail:default ${domain_name} ${dialed_extension}"/>
+      </condition>
+    </extension>
+
+    <!-- 
+	 This extension is used by mod_portaudio so you can pa call sip:someone@example.com
+	 mod_portaudio will pass the entire string to the dialplan for routing.
+    -->
+    <!--
+    <extension name="sip_uri">
+      <condition field="destination_number" expression="^sip:(.*)$">
+	<action application="bridge" data="sofia/${use_profile}/$1"/>
+      </condition>
+    </extension>
+    -->
+   
+    <!--
+	You can place files in the default directory to get included.
+    -->
+    <X-PRE-PROCESS cmd="include" data="default/*.xml"/>
+    
+   
+    <extension name="enum">
+      <condition field="${module_exists(mod_enum)}" expression="true"/>
+      <condition field="destination_number" expression="^(.*)$">
+	<action application="transfer" data="$1 enum"/>
+      </condition>
+    </extension>
+
+  </context>
+</include>

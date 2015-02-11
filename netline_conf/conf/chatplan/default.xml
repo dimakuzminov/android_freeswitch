@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<include>
+  <context name="default">
+<!-- Incoming SMS REWRITE RULES -->
+    <extension name="incoming_sms">
+      <condition field="hint" exression="gsm.*">
+	<action application="lua" data="receive_sms.lua"/>
+
+<!--
+		<action application="set" data="to_user=1000"/>
+		<action application="set" data="to_host=$${local_ip_v4}"/>
+		<action application="set" data="to=sip:1000@$${local_ip_v4}"/>
+		<action application="set" data="dest_proto=sip"/>
+		<action application="set" data="to_proto=sip"/>
+		<action application="send"/>
+		<action application="info"/>
+-->
+
+      </condition>
+    </extension>
+  </context>
+
+  <context name="public">
+    <!-- Outgoing SMS REWRITE RULES -->
+    <extension name="outgoing_sms">
+
+      <condition field="to_user" expression="^(0\d+)$">
+	
+<!--	
+    <action application="set" data="to_user=$1"/>
+	<action application="set" data="to=$1"/>
+	<action application="set" data="from=gsm01"/>
+	<action application="set" data="dest_proto=sms"/>
+	<action application="set" data="proto=sms"/>
+    <action application="info"/>
+	<action application="send"/>
+ -->
+	<action application="lua" data="send_sms.lua"/>
+	 
+      </condition>
+     </extension>
+
+    <extension name="outgoing_sms_reply">
+
+      <condition field="to_user" expression="^sms\+(\+\d+)$">
+		
+<!--
+    <action application="info"/>
+	<action application="set" data="to_user=$1"/>
+	<action application="set" data="to=$1"/>
+	<action application="set" data="from=gsm01"/>
+	<action application="set" data="dest_proto=sms"/>
+	<action application="set" data="proto=sms"/>
+	<action application="info" />
+	<action application="send"/>
+-->
+	<action application="lua" data="send_sms.lua"/>
+      </condition>
+
+
+    </extension>
+
+  </context>
+</include>
