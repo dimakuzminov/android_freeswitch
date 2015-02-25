@@ -1356,6 +1356,12 @@ static switch_status_t switch_loadable_module_load_file(char *path, char *filena
 		dso = switch_dso_open(lib_path, load_global, &derr);
 		switch_safe_free(lib_path);
 	}
+#elif defined(ANDROID)
+	{
+		char *lib_path = switch_mprintf("%s/libfreeswitch.so", SWITCH_GLOBAL_dirs.lib_dir);
+		dso = switch_dso_open(lib_path, load_global, &derr);
+		switch_safe_free(lib_path);
+	}
 #else
 	dso = switch_dso_open(NULL, load_global, &derr);
 #endif
@@ -1803,7 +1809,6 @@ SWITCH_DECLARE(switch_status_t) switch_loadable_module_init(switch_bool_t autolo
 	switch_loadable_module_load_module("", "CORE_SOFTTIMER_MODULE", SWITCH_FALSE, &err);
 	switch_loadable_module_load_module("", "CORE_PCM_MODULE", SWITCH_FALSE, &err);
 	switch_loadable_module_load_module("", "CORE_SPEEX_MODULE", SWITCH_FALSE, &err);
-
 
 	if ((xml = switch_xml_open_cfg(cf, &cfg, NULL))) {
 		switch_xml_t mods, ld;
