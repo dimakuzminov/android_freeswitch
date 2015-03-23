@@ -12,9 +12,9 @@ $(shell cp \
 # setup required folder structure and copy configuration
 # files
 # ========================================================
-$(shell mkdir -p $(TARGET_OUT)/system/opt/freeswitch)
-$(shell cp -a $(LOCAL_PATH)/netline/conf $(TARGET_OUT)/system/opt/freeswitch/)
-$(shell cp -a $(LOCAL_PATH)/netline/scripts $(TARGET_OUT)/system/opt/freeswitch/)
+$(shell mkdir -p $(TARGET_OUT)/opt/freeswitch)
+$(shell cp -a $(LOCAL_PATH)/netline_conf/conf $(TARGET_OUT)/opt/freeswitch/)
+$(shell cp -a $(LOCAL_PATH)/netline_conf/scripts $(TARGET_OUT)/opt/freeswitch/)
 
 # include libs
 include $(LOCAL_PATH)/android_libapr.mk
@@ -29,6 +29,7 @@ include $(LOCAL_PATH)/android_libsofia-sip-ua.mk
 include $(LOCAL_PATH)/android_libteletone.mk
 include $(LOCAL_PATH)/android_libiconv.mk
 include $(LOCAL_PATH)/android_libsndfile.mk
+include $(LOCAL_PATH)/android_libldns.mk
 # include freeswitch executable
 include $(LOCAL_PATH)/android_freeswitch.mk
 # include freeswitch mods
