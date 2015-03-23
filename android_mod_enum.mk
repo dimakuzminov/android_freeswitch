@@ -5,7 +5,7 @@ LOCAL_PATH:= $(call my-dir)
 # ========================================================
 include $(CLEAR_VARS)
 LOCAL_SRC_FILES := \
-	src/mod/loggers/mod_console/mod_console.c \
+	src/mod/applications/mod_enum/mod_enum.c \
 
 LOCAL_C_INCLUDES += \
 					$(LOCAL_PATH)/src/include \
@@ -24,6 +24,7 @@ LOCAL_C_INCLUDES += \
 					$(LOCAL_PATH)/libs/apr-util/include \
 					$(LOCAL_PATH)/libs/apr-util/include/private \
 					$(LOCAL_PATH)/libs/libnatpmp/ \
+					$(LOCAL_PATH)/libs/libldns \
 					$(LOCAL_PATH)/../android_gsmlib/ \
 					$(LOCAL_PATH)/../srtp/crypto/include \
 					$(LOCAL_PATH)/../srtp/include \
@@ -42,6 +43,7 @@ LOCAL_MODULE_TAGS := optional
 LOCAL_MODULE := mod_enum
 
 LOCAL_SHARED_LIBRARIES := \
+	libldns \
 	libfreeswitch \
 
 include $(BUILD_SHARED_LIBRARY)
