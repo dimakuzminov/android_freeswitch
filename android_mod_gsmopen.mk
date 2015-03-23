@@ -7,6 +7,7 @@ include $(CLEAR_VARS)
 LOCAL_SRC_FILES := \
 	src/mod/endpoints/mod_gsmopen/mod_gsmopen.cpp \
 	src/mod/endpoints/mod_gsmopen/gsmopen_protocol.cpp \
+	src/mod/endpoints/mod_gsmopen/gsmopen_android_alsa.cpp \
 
 LOCAL_C_INCLUDES += \
 					$(LOCAL_PATH)/src/include \
@@ -41,11 +42,13 @@ LOCAL_C_INCLUDES += \
 					$(LOCAL_PATH)/../../prebuilts/ndk/8/sources/cxx-stl/gnu-libstdc++/4.7/libs/armeabi-v7a/include \
 					$(LOCAL_PATH)/../../prebuilts/ndk/current/platforms/android-8/arch-arm/usr/include \
 					$(LOCAL_PATH)/../../prebuilts/ndk/8/sources/cxx-stl/gnu-libstdc++/include/backward \
+					$(TARGET_OUT)/../obj/include/mm-audio/libalsa-intf \
 					$(LOCAL_PATH)/include/ \
 					$(KERNEL_OUT)/usr/include \
 
 LOCAL_CFLAGS += -frtti -fexceptions
 LOCAL_LDFLAGS += -L$(TARGET_OUT_SHARED_LIBRARIES) -lgnustl_shared
+
 LOCAL_MODULE_TAGS := optional
 LOCAL_MODULE := mod_gsmopen
 LOCAL_SHARED_LIBRARIES := \
@@ -54,5 +57,6 @@ LOCAL_SHARED_LIBRARIES := \
 	libfreeswitch \
 	libiconv \
 	libctb \
+ 	libalsa-intf \
 
 include $(BUILD_SHARED_LIBRARY)
