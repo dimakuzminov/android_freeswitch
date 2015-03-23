@@ -39,9 +39,9 @@
 #include <sys/timerfd.h>
 #endif
 
-//#if defined(DARWIN)
+#if defined(DARWIN)
 #define DISABLE_1MS_COND
-//#endif
+#endif
 
 #ifndef UINT32_MAX
 #define UINT32_MAX 0xffffffff
