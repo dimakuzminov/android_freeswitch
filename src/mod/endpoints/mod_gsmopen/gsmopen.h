@@ -476,6 +476,10 @@ struct private_object {
 	int buffer2_full;
 	int serialPort_serial_audio_opened;
 
+#ifdef ANDROID
+	int alsa_audio_opened;
+    void *alsa_priv;
+#endif
 };
 
 typedef struct private_object private_t;

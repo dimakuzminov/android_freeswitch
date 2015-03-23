@@ -33,6 +33,14 @@
 
 #include "gsmopen.h"
 
+#ifdef ANDROID
+extern int alsa_audio_init(private_t *tech_pvt);
+extern int alsa_audio_shutdown(private_t *tech_pvt);
+extern int alsa_audio_write(private_t *tech_pvt, char *data, int datalen);
+extern int alsa_audio_read(private_t *tech_pvt, char *data, int datalen);
+
+#endif
+
 SWITCH_BEGIN_EXTERN_C SWITCH_MODULE_LOAD_FUNCTION(mod_gsmopen_load);
 SWITCH_MODULE_SHUTDOWN_FUNCTION(mod_gsmopen_shutdown);
 SWITCH_MODULE_DEFINITION(mod_gsmopen, mod_gsmopen_load, mod_gsmopen_shutdown, NULL);
@@ -679,8 +687,11 @@ static switch_status_t channel_read_frame(switch_core_session_t *session, switch
 		goto cng;
 	}
 	memset(buffer2, 0, sizeof(buffer2));
+#ifdef ANDROID
+    samples = alsa_audio_read(tech_pvt, buffer2, 320);
+#else
 	samples = tech_pvt->serialPort_serial_audio->Read(buffer2, 640);
-
+#endif
 	if (samples >= 320) {
 		tech_pvt->buffer2_full = 0;
 
@@ -825,11 +836,19 @@ static switch_status_t channel_write_frame(switch_core_session_t *session, switc
 
 	gsmopen_sound_boost(frame->data, frame->samples, tech_pvt->playback_boost);
 	if (!tech_pvt->no_sound) {
+#ifdef ANDROID
+		if (!tech_pvt->alsa_audio_opened) {
+			alsa_audio_init(tech_pvt);
+            ERRORA("Why???? \n", GSMOPEN_P_LOG);
+		}
+        // sent always 320 bytes ... ??
+		sent = alsa_audio_write(tech_pvt, (char *) frame->data, (int) (frame->datalen));
+#else
 		if (!tech_pvt->serialPort_serial_audio_opened) {
 			serial_audio_init(tech_pvt);
 		}
 		sent = tech_pvt->serialPort_serial_audio->Write((char *) frame->data, (int) (frame->datalen));
-
+#endif
 		if (sent && sent != frame->datalen && sent != -1) {
 			DEBUGA_GSMOPEN("sent %u\n", GSMOPEN_P_LOG, sent);
 		}
@@ -1257,7 +1276,7 @@ static switch_status_t load_config(int reload_type)
 			const char *ussd_response_encoding = "auto";
 
 			uint32_t interface_id = 0;
-			int controldevice_speed = 115200;	//FIXME TODO
+			int controldevice_speed = 38400;	//FIXME TODO
 			//int controldevice_audio_speed = 115200;	//FIXME TODO
 			uint32_t controldevprotocol = PROTOCOL_AT;	//FIXME TODO
 			uint32_t running = 1;	//FIXME TODO
@@ -1676,8 +1695,13 @@ static switch_status_t load_config(int reload_type)
 				}
 
 				if (globals.GSMOPEN_INTERFACES[interface_id].no_sound == 0) {
+#ifdef ANDROID
+					if (alsa_audio_init(&globals.GSMOPEN_INTERFACES[interface_id])) {
+						ERRORA("alsa_audio_init failed\n", GSMOPEN_P_LOG);
+#else
 					if (serial_audio_init(&globals.GSMOPEN_INTERFACES[interface_id])) {
 						ERRORA("serial_audio_init failed\n", GSMOPEN_P_LOG);
+#endif
 						ERRORA("STARTING interface_id=%u FAILED\n", GSMOPEN_P_LOG, interface_id);
 						globals.GSMOPEN_INTERFACES[interface_id].running = 0;
 						alarm_event(&globals.GSMOPEN_INTERFACES[interface_id], ALARM_FAILED_INTERFACE, "serial_audio_init failed");
@@ -1687,17 +1711,20 @@ static switch_status_t load_config(int reload_type)
 
 					}
 
+#ifdef ANDROID
+					if (alsa_audio_shutdown(&globals.GSMOPEN_INTERFACES[interface_id])) {
+						ERRORA("alsa_audio_shutdown failed\n", GSMOPEN_P_LOG);
+#else
 					if (serial_audio_shutdown(&globals.GSMOPEN_INTERFACES[interface_id])) {
 						ERRORA("serial_audio_shutdown failed\n", GSMOPEN_P_LOG);
+#endif
 						ERRORA("STARTING interface_id=%u FAILED\n", GSMOPEN_P_LOG, interface_id);
 						globals.GSMOPEN_INTERFACES[interface_id].running = 0;
 						alarm_event(&globals.GSMOPEN_INTERFACES[interface_id], ALARM_FAILED_INTERFACE, "serial_audio_shutdown failed");
 						globals.GSMOPEN_INTERFACES[interface_id].active = 0;
 						globals.GSMOPEN_INTERFACES[interface_id].name[0] = '\0';
 						continue;
-
 					}
-
 				}
 
 				globals.GSMOPEN_INTERFACES[interface_id].active = 1;
