@@ -5,7 +5,7 @@ LOCAL_PATH:= $(call my-dir)
 # ========================================================
 include $(CLEAR_VARS)
 LOCAL_SRC_FILES := \
-	src/mod/formats/mod_local_stream/mod_local_stream.c \
+	src/mod/formats/mod_tone_stream/mod_tone_stream.c \
 
 LOCAL_C_INCLUDES += \
 					$(LOCAL_PATH)/src/include \
@@ -43,5 +43,6 @@ LOCAL_MODULE := mod_tone_stream
 
 LOCAL_SHARED_LIBRARIES := \
 	libfreeswitch \
+	libteletone \
 
 include $(BUILD_SHARED_LIBRARY)
