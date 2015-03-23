@@ -523,7 +523,11 @@ SWITCH_DECLARE(switch_call_cause_t) switch_core_session_outgoing_channel(switch_
 
 		forwardvar = switch_channel_get_variable(channel, SWITCH_MAX_FORWARDS_VARIABLE);
 		if (!zstr(forwardvar)) {
+#ifdef ANDROID
+			forwardval = 250;
+#else
 			forwardval = atoi(forwardvar) - 1;
+#endif
 		}
 		if (forwardval <= 0) {
 			return SWITCH_CAUSE_EXCHANGE_ROUTING_ERROR;
