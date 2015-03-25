@@ -217,11 +217,12 @@ int gsmopen_serial_config_AT(private_t *tech_pvt)
 		if (res) {
 			DEBUGA_GSMOPEN("no response to AT+CFUN=1. Continuing\n", GSMOPEN_P_LOG);
 		}
+#ifndef ANDROID //TODO: should be configured from external config
 		res = gsmopen_serial_write_AT_ack(tech_pvt, "AT^CURC=0");
 		if (res) {
 			DEBUGA_GSMOPEN("no response to AT^CURC=0. Continuing\n", GSMOPEN_P_LOG);
 		}
-
+#endif
 		if (strlen(tech_pvt->at_preinit_1)) {
 			res = gsmopen_serial_write_AT_expect(tech_pvt, tech_pvt->at_preinit_1, tech_pvt->at_preinit_1_expect);
 			if (res) {
@@ -283,6 +284,7 @@ int gsmopen_serial_config_AT(private_t *tech_pvt)
 		return -1;
 	}
 
+#ifndef ANDROID //TODO: should be configured from external config
 	/* for motorola, bring it back to "normal" mode if it happens to be in another mode */
 	res = gsmopen_serial_write_AT_ack(tech_pvt, "AT+mode=0");
 	if (res) {
@@ -290,6 +292,7 @@ int gsmopen_serial_config_AT(private_t *tech_pvt)
 	}
 	gsmopen_sleep(50000);
 	/* for motorola end */
+#endif
 
 	/* reset AT configuration to phone default */
 	res = gsmopen_serial_write_AT_ack(tech_pvt, "ATZ");
@@ -307,11 +310,14 @@ int gsmopen_serial_config_AT(private_t *tech_pvt)
 	if (res) {
 		DEBUGA_GSMOPEN("no response to AT+CFUN=1. Continuing\n", GSMOPEN_P_LOG);
 	}
+
+#ifndef ANDROID //TODO: should be configured from external config
+    // periodic messaging mechanism
 	res = gsmopen_serial_write_AT_ack(tech_pvt, "AT^CURC=0");
 	if (res) {
 		DEBUGA_GSMOPEN("no response to AT^CURC=0. Continuing\n", GSMOPEN_P_LOG);
 	}
-
+#endif
 
 	/* disable extended error reporting */
 	res = gsmopen_serial_write_AT_ack(tech_pvt, "AT+CMEE=0");
@@ -331,7 +337,11 @@ int gsmopen_serial_config_AT(private_t *tech_pvt)
 
 	/* phone manufacturer */
 	tech_pvt->requesting_device_mfg = 1;
+#ifdef ANDROID //TODO: should be configured from external config
+	res = gsmopen_serial_write_AT_ack(tech_pvt, "AT+GMI");
+#else
 	res = gsmopen_serial_write_AT_ack(tech_pvt, "AT+CGMI");
+#endif
 	tech_pvt->requesting_device_mfg = 0;
 	if (res) {
 		DEBUGA_GSMOPEN("AT+CGMI failed\n", GSMOPEN_P_LOG);
@@ -339,7 +349,11 @@ int gsmopen_serial_config_AT(private_t *tech_pvt)
 
 	/* phone model */
 	tech_pvt->requesting_device_model = 1;
+#ifdef ANDROID //TODO: should be configured from external config
+	res = gsmopen_serial_write_AT_ack(tech_pvt, "AT+GMM");
+#else
 	res = gsmopen_serial_write_AT_ack(tech_pvt, "AT+CGMM");
+#endif
 	tech_pvt->requesting_device_model = 0;
 	if (res) {
 		DEBUGA_GSMOPEN("AT+CGMM failed\n", GSMOPEN_P_LOG);
@@ -347,7 +361,11 @@ int gsmopen_serial_config_AT(private_t *tech_pvt)
 
 	/* phone firmware */
 	tech_pvt->requesting_device_firmware = 1;
+#ifdef ANDROID //TODO: should be configured from external config
+	res = gsmopen_serial_write_AT_ack(tech_pvt, "AT+GMR");
+#else
 	res = gsmopen_serial_write_AT_ack(tech_pvt, "AT+CGMR");
+#endif
 	tech_pvt->requesting_device_firmware = 0;
 	if (res) {
 		DEBUGA_GSMOPEN("AT+CGMR failed\n", GSMOPEN_P_LOG);
@@ -419,30 +437,13 @@ int gsmopen_serial_config_AT(private_t *tech_pvt)
 	if (res) {
 		DEBUGA_GSMOPEN("no response to AT+CPMS=\"ME\",\"ME\",\"ME\". Continuing\n", GSMOPEN_P_LOG);
 	}
-	/* signal incoming SMS with a +CMTI unsolicited msg */
-	res = gsmopen_serial_write_AT_ack(tech_pvt, "AT+CNMI=2,1,0,0,0");
-	if (res) {
-		DEBUGA_GSMOPEN("AT+CNMI=2,1,0,0,0 failed, continue\n", GSMOPEN_P_LOG);
-		tech_pvt->sms_cnmi_not_supported = 1;
-		tech_pvt->gsmopen_serial_sync_period = 30;	//FIXME in config
-	}
-	res = gsmopen_serial_write_AT_ack(tech_pvt, "AT+CPMS=\"ME\",\"ME\",\"ME\"");
-	if (res) {
-		DEBUGA_GSMOPEN("no response to AT+CPMS=\"ME\",\"ME\",\"ME\". Continuing\n", GSMOPEN_P_LOG);
-	}
-	/* signal incoming SMS with a +CMTI unsolicited msg */
-	res = gsmopen_serial_write_AT_ack(tech_pvt, "AT+CNMI=2,1,0,0,0");
-	if (res) {
-		DEBUGA_GSMOPEN("AT+CNMI=2,1,0,0,0 failed, continue\n", GSMOPEN_P_LOG);
-		tech_pvt->sms_cnmi_not_supported = 1;
-		tech_pvt->gsmopen_serial_sync_period = 30;	//FIXME in config
-	}
-
+	
 	/* what is the Message Center address (number) to which the SMS has to be sent? */
 	res = gsmopen_serial_write_AT_ack(tech_pvt, "AT+CSCA?");
 	if (res) {
 		DEBUGA_GSMOPEN("AT+CSCA? failed, continue\n", GSMOPEN_P_LOG);
 	}
+
 	/* what is the Message Format of SMSs? */
 	res = gsmopen_serial_write_AT_ack(tech_pvt, "AT+CMGF?");
 	if (res) {
@@ -451,8 +452,9 @@ int gsmopen_serial_config_AT(private_t *tech_pvt)
 	res = gsmopen_serial_write_AT_ack(tech_pvt, "AT+CMGF=1");
 	if (res) {
 		ERRORA("Error setting SMS sending mode to TEXT on the cellphone, let's hope is TEXT by default. Continuing\n", GSMOPEN_P_LOG);
-	}
-	tech_pvt->sms_pdu_not_supported = 1;
+	} else {
+	    tech_pvt->sms_pdu_not_supported = 1;
+    }
 
 	res = gsmopen_serial_write_AT_ack(tech_pvt, "AT+CSMP=17,167,0,8");	//unicode, 16 bit message
 	if (res) {
@@ -485,8 +487,9 @@ int gsmopen_serial_config_AT(private_t *tech_pvt)
 	res = gsmopen_serial_write_AT_ack(tech_pvt, "AT+CMGF=0");
 	if (res) {
 		ERRORA("Error setting SMS sending mode to TEXT on the cellphone, let's hope is TEXT by default. Continuing\n", GSMOPEN_P_LOG);
-	}
-	tech_pvt->sms_pdu_not_supported = 0;
+	} else {
+        tech_pvt->sms_pdu_not_supported = 0;
+    }
 	tech_pvt->no_ucs2 = 1;
 
 	/* is the unsolicited reporting of mobile equipment event supported? */
@@ -507,6 +510,7 @@ int gsmopen_serial_config_AT(private_t *tech_pvt)
 		DEBUGA_GSMOPEN("AT+CIND=? failed, continue\n", GSMOPEN_P_LOG);
 	}
 
+#ifndef ANDROID //TODO: should be configured from external config
 	/* is the unsolicited reporting of call monitoring supported? sony-ericsson specific */
 	res = gsmopen_serial_write_AT_ack(tech_pvt, "AT*ECAM=?");
 	if (res) {
@@ -520,7 +524,7 @@ int gsmopen_serial_config_AT(private_t *tech_pvt)
 	} else {
 		tech_pvt->at_has_ecam = 1;
 	}
-
+#endif
 	/* disable unsolicited signaling of call list */
 	res = gsmopen_serial_write_AT_ack(tech_pvt, "AT+CLCC=0");
 	if (res) {
@@ -535,6 +539,7 @@ int gsmopen_serial_config_AT(private_t *tech_pvt)
 	if (res) {
 		DEBUGA_GSMOPEN("AT+CLIP failed, continue\n", GSMOPEN_P_LOG);
 	}
+#ifndef ANDROID //TODO: should be configured from external config
 	/* for motorola */
 	res = gsmopen_serial_write_AT_ack(tech_pvt, "AT+MCST=1");	/* motorola call control codes
 																   (to know when call is disconnected (they
@@ -543,6 +548,8 @@ int gsmopen_serial_config_AT(private_t *tech_pvt)
 		DEBUGA_GSMOPEN("AT+MCST=1 didn't get OK from the phone. If it is NOT Motorola," " no problem.\n", GSMOPEN_P_LOG);
 	}
 	/* for motorola end */
+
+#endif
 
 /* go until first empty postinit string, or last postinit string */
 	while (1) {
@@ -624,8 +631,13 @@ int gsmopen_serial_read_AT(private_t *tech_pvt, int look_for_ack, int timeout_us
 
 	timeout_in_msec = (timeout_sec * 1000) + (timeout_usec ? (timeout_usec / 1000) : 0);
 
+#ifdef ANDROID
+	if (timeout_in_msec > 1000)
+		DEBUGA_GSMOPEN("TIMEOUT=%d\n", GSMOPEN_P_LOG, timeout_in_msec);
+#else
 	if (timeout_in_msec != 100)
 		DEBUGA_GSMOPEN("TIMEOUT=%d\n", GSMOPEN_P_LOG, timeout_in_msec);
+#endif
 
 	if (!running || !tech_pvt || !tech_pvt->running) {
 		return -1;
@@ -2239,12 +2251,20 @@ int gsmopen_serial_write_AT_ack(private_t *tech_pvt, const char *data)
 			tech_pvt->owner->hangupcause = GSMOPEN_CAUSE_FAILURE;
 			gsmopen_queue_control(tech_pvt->owner, GSMOPEN_CONTROL_HANGUP);
 		}
+#ifdef ANDROID
+		switch_sleep(5000000);
+#else
 		switch_sleep(1000000);
+#endif
 
 
 		return -1;
 	}
+#ifdef ANDROID
+	at_result = gsmopen_serial_read_AT(tech_pvt, 1, 500000, 0, NULL, 1);	// 1/10th sec timeout
+#else
 	at_result = gsmopen_serial_read_AT(tech_pvt, 1, 100000, 0, NULL, 1);	// 1/10th sec timeout
+#endif
 	UNLOCKA(tech_pvt->controldev_lock);
 	POPPA_UNLOCKA(tech_pvt->controldev_lock);
 
@@ -2511,8 +2531,12 @@ int ucs2_to_utf8(private_t *tech_pvt, char *ucs2_in, char *utf8_out, size_t outb
 	outbuf = utf8_out;
 	inbuf = converted;
 
+#ifdef ANDROID
+	iconv_format = iconv_open("UTF-8", "UCS-2BE");
+#else
 	iconv_format = iconv_open("UTF8", "UCS-2BE");
-	if (iconv_format == (iconv_t) -1) {
+#endif
+    if (iconv_format == (iconv_t) -1) {
 		ERRORA("error: %s\n", GSMOPEN_P_LOG, strerror(errno));
 		return -1;
 	}
@@ -2551,7 +2575,11 @@ int utf8_to_iso_8859_1(private_t *tech_pvt, char *utf8_in, size_t inbytesleft, c
 	outbuf = iso_8859_1_out;
 	inbuf = utf8_in;
 
+#ifdef ANDROID
+	iconv_format = iconv_open("ISO_8859-1", "UTF-8");
+#else
 	iconv_format = iconv_open("ISO_8859-1", "UTF8");
+#endif
 	if (iconv_format == (iconv_t) -1) {
 		ERRORA("error: %s\n", GSMOPEN_P_LOG, strerror(errno));
 		return -1;
@@ -2590,7 +2618,11 @@ int iso_8859_1_to_utf8(private_t *tech_pvt, char *iso_8859_1_in, char *utf8_out,
 	outbuf = utf8_out;
 	inbuf = iso_8859_1_in;
 
+#ifdef ANDROID
+	iconv_format = iconv_open("UTF-8", "ISO_8859-1");
+#else
 	iconv_format = iconv_open("UTF8", "ISO_8859-1");
+#endif
 	if (iconv_format == (iconv_t) -1) {
 		ERRORA("error: %s\n", GSMOPEN_P_LOG, strerror(errno));
 		return -1;
@@ -2633,7 +2665,11 @@ int utf8_to_ucs2(private_t *tech_pvt, char *utf8_in, size_t inbytesleft, char *u
 	outbuf = converted;
 	inbuf = utf8_in;
 
+#ifdef ANDROID
+	iconv_format = iconv_open("UCS-2BE", "UTF-8");
+#else
 	iconv_format = iconv_open("UCS-2BE", "UTF8");
+#endif
 	if (iconv_format == (iconv_t) -1) {
 		ERRORA("error: %s\n", GSMOPEN_P_LOG, strerror(errno));
 		return -1;
@@ -2860,6 +2896,8 @@ int gsmopen_sendsms(private_t *tech_pvt, char *dest, char *text)
 		PUSHA_UNLOCKA(&tech_pvt->controldev_lock);
 		LOKKA(tech_pvt->controldev_lock);
 
+        DEBUGA_GSMOPEN("GSMopenSendsms: tech_pvt->no_ucs2=%d tech_pvt->sms_pdu_not_supported=%d\n",
+                GSMOPEN_P_LOG, tech_pvt->no_ucs2, tech_pvt->sms_pdu_not_supported);
 		if (tech_pvt->no_ucs2 || tech_pvt->sms_pdu_not_supported == 0) {
 			try {
 				int bad_8859 = 0;
