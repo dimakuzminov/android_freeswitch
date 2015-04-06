@@ -42,12 +42,16 @@
 
 #ifdef WANT_GSMLIB
 #include <gsmlib/gsm_sms.h>
-
+#include <strstream>
+#include <iostream>     // std::cout, std::endl
+#include <iomanip> 
 
 using namespace std;
 using namespace gsmlib;
 #endif // WANT_GSMLIB
 
+int unicode_to_utf8(private_t *tech_pvt, char *unicode, size_t in_len, char *utf8_out, size_t outbytesleft);
+int utf8_to_unicode(private_t *tech_pvt, char *utf8_in, size_t inbytesleft, char *unicode_out, size_t outbytesleft);
 
 extern int running;				//FIXME
 int gsmopen_dir_entry_extension = 1;	//FIXME
@@ -204,6 +208,124 @@ int gsmopen_serial_config_AT(private_t *tech_pvt)
 		gsmopen_sleep(tech_pvt->at_initial_pause);
 	}
 
+#if 0
+                                DEBUGA_GSMOPEN("##################################################################################################\n", GSMOPEN_P_LOG);
+                                string pdu("0791795212010095040C9179525479662500005130035154432105D4F29C3E03");
+                                DEBUGA_GSMOPEN("starting test from decoding pdu(%s)\n",
+                                        GSMOPEN_P_LOG, pdu.c_str() );
+
+                                SMSDecoder d(pdu);
+                                Address   _serviceCentreAddress = d.getAddress(true);
+                                DEBUGA_GSMOPEN("sms _serviceCentreAddress(%s)\n", GSMOPEN_P_LOG, _serviceCentreAddress.toString().c_str());
+                                int _messageTypeIndicator = (int)d.get2Bits(); // bits 0..1
+                                DEBUGA_GSMOPEN("sms _messageTypeIndicator(%d)\n", GSMOPEN_P_LOG, _messageTypeIndicator);
+                                bool _moreMessagesToSend = d.getBit(); // bit 2
+                                DEBUGA_GSMOPEN("sms _moreMessagesToSend(%d)\n", GSMOPEN_P_LOG, _moreMessagesToSend);
+                                d.getBit();                   // bit 3
+                                d.getBit();                   // bit 4
+                                bool _statusReportIndication = d.getBit(); // bit 5
+                                DEBUGA_GSMOPEN("sms _statusReportIndication(%d)\n", GSMOPEN_P_LOG, _statusReportIndication);
+                                bool userDataHeaderIndicator = d.getBit(); // bit 6
+                                DEBUGA_GSMOPEN("sms userDataHeaderIndicator(%d)\n", GSMOPEN_P_LOG, userDataHeaderIndicator);
+                                bool _replyPath = d.getBit();      // bit 7
+                                DEBUGA_GSMOPEN("sms _replyPath(%d)\n", GSMOPEN_P_LOG, _replyPath);
+                                Address _originatingAddress = d.getAddress();
+                                DEBUGA_GSMOPEN("sms _originatingAddress(%s)\n", GSMOPEN_P_LOG, _originatingAddress.toString().c_str());
+                                unsigned char _protocolIdentifier = d.getOctet();
+                                DEBUGA_GSMOPEN("sms _protocolIdentifier(%d)\n", GSMOPEN_P_LOG, _protocolIdentifier);
+                                DataCodingScheme _dataCodingScheme = d.getOctet();
+                                DEBUGA_GSMOPEN("sms _dataCodingScheme(%s)\n", GSMOPEN_P_LOG, _dataCodingScheme.toString().c_str());
+                                Timestamp _serviceCentreTimestamp = d.getTimestamp();
+                                DEBUGA_GSMOPEN("sms passed critical..??\n", GSMOPEN_P_LOG);
+                                DEBUGA_GSMOPEN("sms _year[%d], _month[%d], _day[%d], _hour[%d], _minute[%d], _seconds[%d], _timeZoneMinutes[%d]\n",
+                                        GSMOPEN_P_LOG, 
+                                        _serviceCentreTimestamp._year,
+                                        _serviceCentreTimestamp._month,
+                                        _serviceCentreTimestamp._day,
+                                        _serviceCentreTimestamp._hour,
+                                        _serviceCentreTimestamp._minute,
+                                        _serviceCentreTimestamp._seconds,
+                                        _serviceCentreTimestamp._timeZoneMinutes);
+#if 1
+                                DEBUGA_GSMOPEN("sms passed critical..??\n", GSMOPEN_P_LOG);
+
+                                short timeZoneMinutes = _serviceCentreTimestamp._timeZoneMinutes;
+                                short timeZoneHours = timeZoneMinutes / 60;
+                                timeZoneMinutes %= 60;
+
+                                // format date and time in a locale-specific way
+                                struct tm t;
+                                t.tm_sec = _serviceCentreTimestamp._seconds;
+                                t.tm_min = _serviceCentreTimestamp._minute;
+                                t.tm_hour = _serviceCentreTimestamp._hour;
+                                t.tm_mon = _serviceCentreTimestamp._month - 1;
+                                // year 2000 heuristics, SMSs cannot be older than start of GSM network
+                                t.tm_year = _serviceCentreTimestamp._year < 80 ? _serviceCentreTimestamp._year + 100 : _serviceCentreTimestamp._year;
+                                t.tm_mday = _serviceCentreTimestamp._day;
+                                t.tm_isdst = -1;
+                                t.tm_yday = 0;
+                                t.tm_wday = 0;
+
+                                DEBUGA_GSMOPEN("sms passed critical..??\n", GSMOPEN_P_LOG);
+
+                                char text[1024];
+                                int formattedTimeSize = strftime(text, 1023, "%x %X", &t) + 1;
+
+                                DEBUGA_GSMOPEN("sms passed critical..??\n", GSMOPEN_P_LOG);
+                                char *formattedTime = (char*)alloca(sizeof(char) * formattedTimeSize);
+                                DEBUGA_GSMOPEN("sms passed critical..??\n", GSMOPEN_P_LOG);
+                                strftime(formattedTime, formattedTimeSize, "%x %X", &t);
+                                DEBUGA_GSMOPEN("sms passed critical..??\n", GSMOPEN_P_LOG);
+
+                                DEBUGA_GSMOPEN("sms fomrattedTime(%s)\n", GSMOPEN_P_LOG, formattedTime);
+
+                                ostrstream os;
+                                os << formattedTime << " (" << (_serviceCentreTimestamp._negativeTimeZone ? '-' : '+')
+                                    << setfill('0') << setw(2) << timeZoneHours 
+                                    << setw(2) << timeZoneMinutes << ')' << ends;
+                                char *ss = os.str();
+                                string result(ss);
+                                DEBUGA_GSMOPEN("sms result(%s)\n", GSMOPEN_P_LOG, result.c_str());
+                                delete[] ss;
+                                DEBUGA_GSMOPEN("sms passed critical..??\n", GSMOPEN_P_LOG);
+#endif
+                                DEBUGA_GSMOPEN("sms _serviceCentreTimestamp(%s)\n", GSMOPEN_P_LOG, _serviceCentreTimestamp.toString(false).c_str());
+                                unsigned char userDataLength = d.getOctet();
+                                DEBUGA_GSMOPEN("sms userDataLength(%d)\n", GSMOPEN_P_LOG, userDataLength);
+                                d.markSeptet();
+
+                                UserDataHeader _userDataHeader;
+                                string _userData;
+                                if (userDataHeaderIndicator) {
+                                    DEBUGA_GSMOPEN("test line\n", GSMOPEN_P_LOG);
+                                    _userDataHeader.decode(d);
+                                    if (_dataCodingScheme.getAlphabet() == DCS_DEFAULT_ALPHABET) {
+                                        DEBUGA_GSMOPEN("test line\n", GSMOPEN_P_LOG);
+                                        userDataLength -= ((_userDataHeader.length() + 1) * 8 + 6) / 7;
+                                    } else {
+                                        DEBUGA_GSMOPEN("test line\n", GSMOPEN_P_LOG);
+                                        userDataLength -= ((string)_userDataHeader).length() + 1;
+                                    }
+                                } else {
+                                    DEBUGA_GSMOPEN("test line\n", GSMOPEN_P_LOG);
+                                    _userDataHeader = UserDataHeader();
+                                }
+
+                                if (_dataCodingScheme.getAlphabet() == DCS_DEFAULT_ALPHABET) {
+                                    // userDataLength is length in septets
+                                    DEBUGA_GSMOPEN("test line\n", GSMOPEN_P_LOG);
+                                    _userData = d.getString(userDataLength);
+                                    _userData = gsmToLatin1(_userData);
+                                } else {
+                                    // userDataLength is length in octets
+                                    DEBUGA_GSMOPEN("test line\n", GSMOPEN_P_LOG);
+                                    unsigned char *s = (unsigned char*)alloca(sizeof(unsigned char) * userDataLength);
+                                    d.getOctets(s, userDataLength);
+                                    _userData.assign((char*)s, (unsigned int)userDataLength);
+                                }
+
+                                DEBUGA_GSMOPEN("exiting by scenario sms data (%s)\n", GSMOPEN_P_LOG, _userData.c_str());
+#endif
 /* go until first empty preinit string, or last preinit string */
 	while (1) {
 
@@ -433,11 +555,17 @@ int gsmopen_serial_config_AT(private_t *tech_pvt)
 		tech_pvt->sms_cnmi_not_supported = 1;
 		tech_pvt->gsmopen_serial_sync_period = 30;	//FIXME in config
 	}
+#ifdef ANDROID //TODO: ugly fix, must be in xml file as parameter
+	res = gsmopen_serial_write_AT_ack(tech_pvt, "AT+CPMS=\"SM\",\"SM\",\"SM\"");
+	if (res) {
+		DEBUGA_GSMOPEN("no response to AT+CPMS=\"SM\",\"SM\",\"SM\". Continuing\n", GSMOPEN_P_LOG);
+	}
+#else
 	res = gsmopen_serial_write_AT_ack(tech_pvt, "AT+CPMS=\"ME\",\"ME\",\"ME\"");
 	if (res) {
 		DEBUGA_GSMOPEN("no response to AT+CPMS=\"ME\",\"ME\",\"ME\". Continuing\n", GSMOPEN_P_LOG);
 	}
-	
+#endif
 	/* what is the Message Center address (number) to which the SMS has to be sent? */
 	res = gsmopen_serial_write_AT_ack(tech_pvt, "AT+CSCA?");
 	if (res) {
@@ -1248,6 +1376,8 @@ int gsmopen_serial_read_AT(private_t *tech_pvt, int look_for_ack, int timeout_us
 				err = sscanf(&tech_pvt->line_array.result[i][12], "%d", &pos);
 				if (err < 1) {
 					ERRORA("|%s| is not formatted as: |+CMTI: \"MT\",xx|\n", GSMOPEN_P_LOG, tech_pvt->line_array.result[i]);
+				} else if (pos < 0) {
+					ERRORA("|%s| wrong index (%d), must be > 0: |+CMTI: \"MT\",xx|\n", GSMOPEN_P_LOG, pos);
 				} else {
 					DEBUGA_GSMOPEN("|%s| +CMTI: Incoming SMS in position: %d!\n", GSMOPEN_P_LOG, tech_pvt->line_array.result[i], pos);
 					tech_pvt->unread_sms_msg_id = pos;
@@ -1838,9 +1968,120 @@ int gsmopen_serial_read_AT(private_t *tech_pvt, int look_for_ack, int timeout_us
 							char content2[1000];
 							SMSMessageRef sms;
 
-							DEBUGA_GSMOPEN("about to decode\n", GSMOPEN_P_LOG);
+							DEBUGA_GSMOPEN("about to decode [%s]\n",
+                                    GSMOPEN_P_LOG, tech_pvt->line_array.result[i]);
 							try {
-								sms = SMSMessage::decode(tech_pvt->line_array.result[i]);	// dataCodingScheme = 8 , text=ciao 123 belè новости לק ראת ﺎﻠﺠﻤﻋﺓ 人大
+#if 1
+								sms = SMSMessage::decode(tech_pvt->line_array.result[i], true);	// dataCodingScheme = 8 , text=ciao 123 belè новости לק ראת ﺎﻠﺠﻤﻋﺓ 人大
+#else
+
+                                string pdu(tech_pvt->line_array.result[i]);
+                                DEBUGA_GSMOPEN("starting test from decoding pdu(%s)\n",
+                                        GSMOPEN_P_LOG, pdu.c_str() );
+
+                                SMSDecoder d(pdu);
+                                Address   _serviceCentreAddress = d.getAddress(true);
+                                DEBUGA_GSMOPEN("sms _serviceCentreAddress(%s)\n", GSMOPEN_P_LOG, _serviceCentreAddress.toString().c_str());
+                                int _messageTypeIndicator = (int)d.get2Bits(); // bits 0..1
+                                DEBUGA_GSMOPEN("sms _messageTypeIndicator(%d)\n", GSMOPEN_P_LOG, _messageTypeIndicator);
+                                bool _moreMessagesToSend = d.getBit(); // bit 2
+                                DEBUGA_GSMOPEN("sms _moreMessagesToSend(%d)\n", GSMOPEN_P_LOG, _moreMessagesToSend);
+                                d.getBit();                   // bit 3
+                                d.getBit();                   // bit 4
+                                bool _statusReportIndication = d.getBit(); // bit 5
+                                DEBUGA_GSMOPEN("sms _statusReportIndication(%d)\n", GSMOPEN_P_LOG, _statusReportIndication);
+                                bool userDataHeaderIndicator = d.getBit(); // bit 6
+                                DEBUGA_GSMOPEN("sms userDataHeaderIndicator(%d)\n", GSMOPEN_P_LOG, userDataHeaderIndicator);
+                                bool _replyPath = d.getBit();      // bit 7
+                                DEBUGA_GSMOPEN("sms _replyPath(%d)\n", GSMOPEN_P_LOG, _replyPath);
+                                Address _originatingAddress = d.getAddress();
+                                DEBUGA_GSMOPEN("sms _originatingAddress(%s)\n", GSMOPEN_P_LOG, _originatingAddress.toString().c_str());
+                                unsigned char _protocolIdentifier = d.getOctet();
+                                DEBUGA_GSMOPEN("sms _protocolIdentifier(%d)\n", GSMOPEN_P_LOG, _protocolIdentifier);
+                                DataCodingScheme _dataCodingScheme = d.getOctet();
+                                DEBUGA_GSMOPEN("sms _dataCodingScheme(%s)\n", GSMOPEN_P_LOG, _dataCodingScheme.toString().c_str());
+                                Timestamp _serviceCentreTimestamp = d.getTimestamp();
+                                DEBUGA_GSMOPEN("sms _year[%d], _month[%d], _day[%d], _hour[%d], _minute[%d], _seconds[%d], _timeZoneMinutes[%d]\n",
+                                        GSMOPEN_P_LOG, 
+                                        _serviceCentreTimestamp._year,
+                                        _serviceCentreTimestamp._month,
+                                        _serviceCentreTimestamp._day,
+                                        _serviceCentreTimestamp._hour,
+                                        _serviceCentreTimestamp._minute,
+                                        _serviceCentreTimestamp._seconds,
+                                        _serviceCentreTimestamp._timeZoneMinutes);
+#if 0
+
+                                short timeZoneMinutes = _timeZoneMinutes;
+                                short timeZoneHours = timeZoneMinutes / 60;
+                                timeZoneMinutes %= 60;
+
+                                // format date and time in a locale-specific way
+                                struct tm t;
+                                t.tm_sec = _seconds;
+                                t.tm_min = _minute;
+                                t.tm_hour = _hour;
+                                t.tm_mon = _month - 1;
+                                // year 2000 heuristics, SMSs cannot be older than start of GSM network
+                                t.tm_year = _year < 80 ? _year + 100 : _year;
+                                t.tm_mday = _day;
+                                t.tm_isdst = -1;
+                                t.tm_yday = 0;
+                                t.tm_wday = 0;
+
+                                int formattedTimeSize = strftime(NULL, INT_MAX, "%x %X", &t) + 1;
+                                char *formattedTime = (char*)alloca(sizeof(char) * formattedTimeSize);
+                                strftime(formattedTime, formattedTimeSize, "%x %X", &t);
+
+                                if (! appendTimeZone)
+                                    return formattedTime;
+
+                                ostrstream os;
+                                os << formattedTime << " (" << (_negativeTimeZone ? '-' : '+')
+                                    << setfill('0') << setw(2) << timeZoneHours 
+                                    << setw(2) << timeZoneMinutes << ')' << ends;
+                                char *ss = os.str();
+                                string result(ss);
+                                delete[] ss;
+#endif
+                                DEBUGA_GSMOPEN("sms _serviceCentreTimestamp(%s)\n", GSMOPEN_P_LOG, _serviceCentreTimestamp.toString(false).c_str());
+                                unsigned char userDataLength = d.getOctet();
+                                DEBUGA_GSMOPEN("sms userDataLength(%d)\n", GSMOPEN_P_LOG, userDataLength);
+                                d.markSeptet();
+
+                                UserDataHeader _userDataHeader;
+                                string _userData;
+                                if (userDataHeaderIndicator) {
+                                    DEBUGA_GSMOPEN("test line\n", GSMOPEN_P_LOG);
+                                    _userDataHeader.decode(d);
+                                    if (_dataCodingScheme.getAlphabet() == DCS_DEFAULT_ALPHABET) {
+                                        DEBUGA_GSMOPEN("test line\n", GSMOPEN_P_LOG);
+                                        userDataLength -= ((_userDataHeader.length() + 1) * 8 + 6) / 7;
+                                    } else {
+                                        DEBUGA_GSMOPEN("test line\n", GSMOPEN_P_LOG);
+                                        userDataLength -= ((string)_userDataHeader).length() + 1;
+                                    }
+                                } else {
+                                    DEBUGA_GSMOPEN("test line\n", GSMOPEN_P_LOG);
+                                    _userDataHeader = UserDataHeader();
+                                }
+
+                                if (_dataCodingScheme.getAlphabet() == DCS_DEFAULT_ALPHABET) {
+                                    // userDataLength is length in septets
+                                    DEBUGA_GSMOPEN("test line\n", GSMOPEN_P_LOG);
+                                    _userData = d.getString(userDataLength);
+                                    _userData = gsmToLatin1(_userData);
+                                } else {
+                                    // userDataLength is length in octets
+                                    DEBUGA_GSMOPEN("test line\n", GSMOPEN_P_LOG);
+                                    unsigned char *s = (unsigned char*)alloca(sizeof(unsigned char) * userDataLength);
+                                    d.getOctets(s, userDataLength);
+                                    _userData.assign((char*)s, (unsigned int)userDataLength);
+                                }
+
+                                DEBUGA_GSMOPEN("exiting by scenario\n", GSMOPEN_P_LOG);
+                                exit(-1);
+#endif
 							}
 							catch(...) {
 								ERRORA("GsmException\n", GSMOPEN_P_LOG);
@@ -1850,7 +2091,7 @@ int gsmopen_serial_read_AT(private_t *tech_pvt, int look_for_ack, int timeout_us
 
 							DEBUGA_GSMOPEN("after decode\n", GSMOPEN_P_LOG);
 
-#if 0
+#if 1
 							char letsee[1024];
 							memset(letsee, '\0', sizeof(letsee));
 	
@@ -1868,11 +2109,16 @@ int gsmopen_serial_read_AT(private_t *tech_pvt, int look_for_ack, int timeout_us
 							DEBUGA_GSMOPEN("SMS=\n%s\n", GSMOPEN_P_LOG, letsee);
 #endif //0
 							memset(content2, '\0', sizeof(content2));
+                            ERRORA("################### dataCodingScheme =%u\n", GSMOPEN_P_LOG, sms->dataCodingScheme().getAlphabet());
 							if (sms->dataCodingScheme().getAlphabet() == DCS_DEFAULT_ALPHABET) {
 								iso_8859_1_to_utf8(tech_pvt, (char *) sms->userData().c_str(), content2, sizeof(content2));
 							} else if (sms->dataCodingScheme().getAlphabet() == DCS_SIXTEEN_BIT_ALPHABET) {
+#ifdef ANDROID
+								unicode_to_utf8(tech_pvt, (char *) sms->userData().data(), sms->userData().length(), content2, sizeof(content2));
+#else
 								ucs2_to_utf8(tech_pvt, (char *) bufToHex((unsigned char *) sms->userData().data(), sms->userData().length()).c_str(),
 											 content2, sizeof(content2));
+#endif
 							} else {
 								ERRORA("dataCodingScheme not supported=%u\n", GSMOPEN_P_LOG, sms->dataCodingScheme().getAlphabet());
 
@@ -2513,7 +2759,7 @@ int ucs2_to_utf8(private_t *tech_pvt, char *ucs2_in, char *utf8_out, size_t outb
 	char *inbuf;
 	size_t inbytesleft;
 	int c;
-	char stringa[5];
+	char stringa[10];
 	double hexnum;
 	int i = 0;
 
@@ -2565,6 +2811,35 @@ int ucs2_to_utf8(private_t *tech_pvt, char *ucs2_in, char *utf8_out, size_t outb
 	return 0;
 }
 
+int utf8_to_unicode(private_t *tech_pvt, char *utf8_in, size_t inbytesleft, char *unicode_out, size_t outbytesleft)
+{
+	iconv_t iconv_format;
+	int iconv_res;
+	char *outbuf;
+	char *inbuf;
+	outbuf = unicode_out;
+	inbuf = utf8_in;
+	iconv_format = iconv_open("UNICODE-1-1", "UTF-8");
+	if (iconv_format == (iconv_t) -1) {
+		ERRORA("error: %s\n", GSMOPEN_P_LOG, strerror(errno));
+		return -1;
+	}
+	outbytesleft = strlen(utf8_in) * 2;
+	DEBUGA_GSMOPEN("in=%s, inleft=%d, out=%s, outleft=%d, utf8_in=%s, unicode_out=%s\n",
+				   GSMOPEN_P_LOG, inbuf, (int) inbytesleft, outbuf, (int) outbytesleft, utf8_in, unicode_out);
+	iconv_res = iconv(iconv_format, &inbuf, &inbytesleft, &outbuf, &outbytesleft);
+	if (iconv_res == (size_t) -1) {
+		DEBUGA_GSMOPEN("cannot translate in UNICODE-1-1 error: %s (errno: %d)\n", GSMOPEN_P_LOG, strerror(errno), errno);
+		return -1;
+	}
+	DEBUGA_GSMOPEN
+		("iconv_res=%d,  in=%s, inleft=%d, out=%s, outleft=%d, utf8_in=%s, unicode_out=%s\n",
+		 GSMOPEN_P_LOG, iconv_res, inbuf, (int) inbytesleft, outbuf, (int) outbytesleft, utf8_in, unicode_out);
+	iconv_close(iconv_format);
+	return 0;
+}
+
+
 int utf8_to_iso_8859_1(private_t *tech_pvt, char *utf8_in, size_t inbytesleft, char *iso_8859_1_out, size_t outbytesleft)
 {
 	iconv_t iconv_format;
@@ -2604,6 +2879,36 @@ int utf8_to_iso_8859_1(private_t *tech_pvt, char *utf8_in, size_t inbytesleft, c
 	return 0;
 }
 
+
+int unicode_to_utf8(private_t *tech_pvt, char *unicode, size_t in_len, char *utf8_out, size_t outbytesleft)
+{
+	iconv_t iconv_format;
+	int iconv_res;
+	char *outbuf;
+	char *inbuf;
+	DEBUGA_GSMOPEN("we can't display it correctly, still ~ unicode=%s\n", GSMOPEN_P_LOG, unicode);
+	outbuf = utf8_out;
+	inbuf = unicode;
+
+	iconv_format = iconv_open("UTF-8", "UNICODE-1-1");
+	if (iconv_format == (iconv_t) -1) {
+		ERRORA("error: %s\n", GSMOPEN_P_LOG, strerror(errno));
+		return -1;
+	}
+	iconv_res = iconv(iconv_format, &inbuf, &in_len, &outbuf, &outbytesleft);
+	if (iconv_res == (size_t) -1) {
+		DEBUGA_GSMOPEN("ciao in=%s, inleft=%d, out=%s, outleft=%d, utf8_out=%s\n",
+					   GSMOPEN_P_LOG, inbuf, (int) in_len, outbuf, (int) outbytesleft, utf8_out);
+		DEBUGA_GSMOPEN("error: %s %d\n", GSMOPEN_P_LOG, strerror(errno), errno);
+		return -1;
+	}
+	DEBUGA_GSMOPEN
+		(" strlen(unicode)=%d, iconv_res=%d,  inbuf=%s, inleft=%d, out=%s, outleft=%d, utf8_out=%s\n",
+		 GSMOPEN_P_LOG, (int) strlen(unicode), iconv_res, inbuf, (int) in_len, outbuf, (int) outbytesleft, utf8_out);
+
+	iconv_close(iconv_format);
+	return 0;
+}
 
 int iso_8859_1_to_utf8(private_t *tech_pvt, char *iso_8859_1_in, char *utf8_out, size_t outbytesleft)
 {
@@ -2920,26 +3225,43 @@ int gsmopen_sendsms(private_t *tech_pvt, char *dest, char *text)
 					memset(smscommand, '\0', sizeof(smscommand));
 					pdulenght = pdu.length() / 2 - 1;
 					sprintf(smscommand, "AT+CMGS=%d", pdulenght);
-				} else {
-					int ok;
+                } else {
+                    int bad_unicode = 0;
+                    bad_unicode = utf8_to_unicode(tech_pvt, text, strlen(text), smscommand, sizeof(smscommand));
+                    if (!bad_unicode) {
+                        err = gsmopen_serial_write_AT_ack(tech_pvt, "AT+CMGF=0");
+                        if (err) {
+                            ERRORA("AT+CMGF=0 (set message sending to PDU (as opposed to TEXT)  didn't get OK from the phone\n", GSMOPEN_P_LOG);
+                        }
+                        SMSMessageRef smsMessage;
+                        smsMessage = new SMSSubmitMessage(smscommand, dest);
+                        smsMessage->setDataCodingScheme(DCS_SIXTEEN_BIT_ALPHABET);
+                        pdu = smsMessage->encode();
+                        strncpy(pdu2, pdu.c_str(), sizeof(pdu2) - 1);
+                        memset(smscommand, '\0', sizeof(smscommand));
+                        pdulenght = pdu.length() / 2 - 1;
+                        sprintf(smscommand, "AT+CMGS=%d", pdulenght);
+                    } else {
+                        int ok;
 
-					UNLOCKA(tech_pvt->controldev_lock);
-					POPPA_UNLOCKA(&tech_pvt->controldev_lock);
+                        UNLOCKA(tech_pvt->controldev_lock);
+                        POPPA_UNLOCKA(&tech_pvt->controldev_lock);
 
-					tech_pvt->no_ucs2 = 0;
-					tech_pvt->sms_pdu_not_supported = 1;
+                        tech_pvt->no_ucs2 = 0;
+                        tech_pvt->sms_pdu_not_supported = 1;
 
-					ok = gsmopen_sendsms(tech_pvt, dest, text);
+                        ok = gsmopen_sendsms(tech_pvt, dest, text);
 
-					tech_pvt->no_ucs2 = 1;
-					tech_pvt->sms_pdu_not_supported = 0;
+                        tech_pvt->no_ucs2 = 1;
+                        tech_pvt->sms_pdu_not_supported = 0;
 
-					err = gsmopen_serial_write_AT_ack(tech_pvt, "AT+CMGF=0");
-					if (err) {
-						ERRORA("AT+CMGF=0 (set message sending to PDU (as opposed to TEXT)  didn't get OK from the phone\n", GSMOPEN_P_LOG);
-					}
-					return ok;
-				}
+                        err = gsmopen_serial_write_AT_ack(tech_pvt, "AT+CMGF=0");
+                        if (err) {
+                            ERRORA("AT+CMGF=0 (set message sending to PDU (as opposed to TEXT)  didn't get OK from the phone\n", GSMOPEN_P_LOG);
+                        }
+                        return ok;
+                    }
+                }
 
 			}
 			catch(GsmException & ge) {
@@ -3314,6 +3636,7 @@ int gsmopen_serial_init_audio_port(private_t *tech_pvt, int controldevice_audio_
 
 int serial_audio_init(private_t *tech_pvt)
 {
+
 	int res;
 	int err;
 
