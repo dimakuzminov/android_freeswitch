@@ -77,8 +77,17 @@ struct sk_timezone {
 	int tz_minuteswest;			/* minutes W of Greenwich */
 	int tz_dsttime;				/* type of dst correction */
 };
+
 int gettimeofday(struct timeval *tv, struct sk_timezone *tz)
 {
+#ifdef ANDROID 
+    //TODO: actually, it is general improper code
+    //      it is better to implement as freeswitch design..
+	switch_time_t now = switch_micro_time_now();
+    tv.tv_sec = now / 1000000; // 1,000,000 microseconds in second
+    tv.tv_usec = now % 1000000; 
+    return 0;
+#else
 	FILETIME ft;
 	unsigned __int64 tmpres = 0;
 	static int tzflag;
@@ -102,6 +111,7 @@ int gettimeofday(struct timeval *tv, struct sk_timezone *tz)
 		tz->tz_minuteswest = _timezone / 60;
 		tz->tz_dsttime = _daylight;
 	}
+#endif
 	return 0;
 }
 
