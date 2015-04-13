@@ -51,7 +51,7 @@ using namespace gsmlib;
 #endif // WANT_GSMLIB
 
 int unicode_to_utf8(private_t *tech_pvt, char *unicode, size_t in_len, char *utf8_out, size_t outbytesleft);
-int utf8_to_unicode(private_t *tech_pvt, char *utf8_in, size_t inbytesleft, char *unicode_out, size_t outbytesleft);
+int utf8_to_unicode(private_t *tech_pvt, char *utf8_in, size_t inbytes, char *unicode_out, size_t &outbytes);
 
 extern int running;				//FIXME
 int gsmopen_dir_entry_extension = 1;	//FIXME
@@ -806,7 +806,11 @@ int gsmopen_serial_read_AT(private_t *tech_pvt, int look_for_ack, int timeout_us
 		read_count = tech_pvt->serialPort_serial_control->Read(tmp_answer_ptr, AT_BUFSIZ - (tmp_answer_ptr - tmp_answer));
 		memset(tmp_answer3, 0, sizeof(char) * AT_BUFSIZ);
 		strcpy(tmp_answer3, tmp_answer_ptr);
-
+#if 0 //TODO: after stabilizing answer, please remove
+        if (strlen(tmp_answer3)) {
+            ERRORA("################# READ FROM SERIAL [%s]\n", GSMOPEN_P_LOG, tmp_answer3);
+        }
+#endif
 		if (read_count == 0) {
 			if (msecs_passed <= timeout_in_msec) {
 				goto read;
@@ -936,6 +940,8 @@ int gsmopen_serial_read_AT(private_t *tech_pvt, int look_for_ack, int timeout_us
 									   "seems not to support\n", GSMOPEN_P_LOG, tech_pvt->line_array.result[i]);
 					}
 				}
+                /* set timestamp for CALLFLOW_INCOMING_RING state */
+				gettimeofday(&(tech_pvt->ringtime), NULL);
 				tech_pvt->phone_callflow = CALLFLOW_INCOMING_RING;
 			}
 
@@ -967,6 +973,8 @@ int gsmopen_serial_read_AT(private_t *tech_pvt, int look_for_ack, int timeout_us
 					}
 				}
 
+                /* set timestamp for CALLFLOW_INCOMING_RING state */
+				gettimeofday(&(tech_pvt->ringtime), NULL);
 				tech_pvt->phone_callflow = CALLFLOW_INCOMING_RING;
 				DEBUGA_GSMOPEN("|%s| CLCC CALLID: name is %s, number is %s\n", GSMOPEN_P_LOG,
 							   tech_pvt->line_array.result[i],
@@ -1008,6 +1016,8 @@ int gsmopen_serial_read_AT(private_t *tech_pvt, int look_for_ack, int timeout_us
 				}
 
 				tech_pvt->interface_state = GSMOPEN_STATE_RING;
+                /* set timestamp for CALLFLOW_INCOMING_RING state */
+				gettimeofday(&(tech_pvt->ringtime), NULL);
 				tech_pvt->phone_callflow = CALLFLOW_INCOMING_RING;
 				DEBUGA_GSMOPEN("|%s| CLIP INCOMING CALLID: name is %s, number is %s\n", GSMOPEN_P_LOG,
 							   tech_pvt->line_array.result[i],
@@ -2517,7 +2527,7 @@ int gsmopen_serial_write_AT_ack(private_t *tech_pvt, const char *data)
 		return -1;
 	}
 #ifdef ANDROID
-	at_result = gsmopen_serial_read_AT(tech_pvt, 1, 500000, 0, NULL, 1);	// 1/10th sec timeout
+	at_result = gsmopen_serial_read_AT(tech_pvt, 1, 1000000, 0, NULL, 1);	// 1 sec timeout
 #else
 	at_result = gsmopen_serial_read_AT(tech_pvt, 1, 100000, 0, NULL, 1);	// 1/10th sec timeout
 #endif
@@ -2564,7 +2574,11 @@ int gsmopen_serial_write_AT_ack_nocr_longtime(private_t *tech_pvt, const char *d
 		return -1;
 	}
 
+#ifdef ANDROID
+	at_result = gsmopen_serial_read_AT(tech_pvt, 1, 1000000, 20, NULL, 1);	// 1 sec timeout
+#else
 	at_result = gsmopen_serial_read_AT(tech_pvt, 1, 500000, 20, NULL, 1);	// 20.5 sec timeout
+#endif
 	UNLOCKA(tech_pvt->controldev_lock);
 	POPPA_UNLOCKA(tech_pvt->controldev_lock);
 
@@ -2608,7 +2622,11 @@ int gsmopen_serial_write_AT_expect1(private_t *tech_pvt, const char *data, const
 		return -1;
 	}
 
+#ifdef ANDROID
+	at_result = gsmopen_serial_read_AT(tech_pvt, 1, 1000000, seconds, expected_string, expect_crlf);	// minimum sec timeout
+#else
 	at_result = gsmopen_serial_read_AT(tech_pvt, 1, 500000, seconds, expected_string, expect_crlf);	// minimum half a sec timeout
+#endif
 	UNLOCKA(tech_pvt->controldev_lock);
 	POPPA_UNLOCKA(tech_pvt->controldev_lock);
 
@@ -2821,7 +2839,7 @@ int ucs2_to_utf8(private_t *tech_pvt, char *ucs2_in, char *utf8_out, size_t outb
 	return 0;
 }
 
-int utf8_to_unicode(private_t *tech_pvt, char *utf8_in, size_t inbytesleft, char *unicode_out, size_t outbytesleft)
+int utf8_to_unicode(private_t *tech_pvt, char *utf8_in, size_t inbytes, char *unicode_out, size_t &outbytes)
 {
 	iconv_t iconv_format;
 	int iconv_res;
@@ -2834,17 +2852,22 @@ int utf8_to_unicode(private_t *tech_pvt, char *utf8_in, size_t inbytesleft, char
 		ERRORA("error: %s\n", GSMOPEN_P_LOG, strerror(errno));
 		return -1;
 	}
-	outbytesleft = strlen(utf8_in) * 2;
-	DEBUGA_GSMOPEN("in=%s, inleft=%d, out=%s, outleft=%d, utf8_in=%s, unicode_out=%s\n",
-				   GSMOPEN_P_LOG, inbuf, (int) inbytesleft, outbuf, (int) outbytesleft, utf8_in, unicode_out);
-	iconv_res = iconv(iconv_format, &inbuf, &inbytesleft, &outbuf, &outbytesleft);
+    outbytes =  inbytes* 2;
+    // We need to keep temporary count of bytes that left after conversion
+    // issue related to iconv function behavior
+	size_t outbytesleft = outbytes;
+	DEBUGA_GSMOPEN("in=%s, in_len=%d, out=%s, out_len=%d, utf8_in=%s, unicode_out=%s\n",
+				   GSMOPEN_P_LOG, inbuf, (int) inbytes, outbuf, (int) outbytesleft, utf8_in, unicode_out);
+	iconv_res = iconv(iconv_format, &inbuf, &inbytes, &outbuf, &outbytesleft);
 	if (iconv_res == (size_t) -1) {
 		DEBUGA_GSMOPEN("cannot translate in UNICODE-1-1 error: %s (errno: %d)\n", GSMOPEN_P_LOG, strerror(errno), errno);
 		return -1;
 	}
+    // now calculate used bytes size
+    outbytes -= outbytesleft;
 	DEBUGA_GSMOPEN
-		("iconv_res=%d,  in=%s, inleft=%d, out=%s, outleft=%d, utf8_in=%s, unicode_out=%s\n",
-		 GSMOPEN_P_LOG, iconv_res, inbuf, (int) inbytesleft, outbuf, (int) outbytesleft, utf8_in, unicode_out);
+		("iconv_res=%d,  in=%s, in_len=%d, out=%s, outbytes=%d, utf8_in=%s, unicode_out=%s\n",
+		 GSMOPEN_P_LOG, iconv_res, inbuf, (int) inbytes, outbuf, (int) outbytes, utf8_in, unicode_out);
 	iconv_close(iconv_format);
 	return 0;
 }
@@ -3237,14 +3260,18 @@ int gsmopen_sendsms(private_t *tech_pvt, char *dest, char *text)
 					sprintf(smscommand, "AT+CMGS=%d", pdulenght);
                 } else {
                     int bad_unicode = 0;
-                    bad_unicode = utf8_to_unicode(tech_pvt, text, strlen(text), smscommand, sizeof(smscommand));
+                    size_t smscommandSize = sizeof(smscommand);
+                    // we need to use std::string with our utf8, otherwise we cannot calculate correctly
+                    // nuber of bytes in utf8 string
+                    bad_unicode = utf8_to_unicode(tech_pvt, text, string(text).size(), smscommand, smscommandSize);
                     if (!bad_unicode) {
                         err = gsmopen_serial_write_AT_ack(tech_pvt, "AT+CMGF=0");
                         if (err) {
                             ERRORA("AT+CMGF=0 (set message sending to PDU (as opposed to TEXT)  didn't get OK from the phone\n", GSMOPEN_P_LOG);
                         }
                         SMSMessageRef smsMessage;
-                        smsMessage = new SMSSubmitMessage(smscommand, dest);
+                        string smscommandBuffer(smscommand, smscommandSize+2);
+                        smsMessage = new SMSSubmitMessage(smscommandBuffer, dest);
                         smsMessage->setDataCodingScheme(DCS_SIXTEEN_BIT_ALPHABET);
                         pdu = smsMessage->encode();
                         strncpy(pdu2, pdu.c_str(), sizeof(pdu2) - 1);
