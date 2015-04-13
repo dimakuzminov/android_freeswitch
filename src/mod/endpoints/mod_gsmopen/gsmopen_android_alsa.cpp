@@ -175,6 +175,58 @@ static int set_params_in(private_t *tech_pvt, struct pcm *pcm)
     return 0;
 }
 
+struct mixer_ctl *alsa_audio_get_ctl(struct mixer *mixer, const char *name) {
+    char *p;
+    unsigned int idx = 0;
+    if (isdigit(name[0])) {
+        return mixer_get_nth_control(mixer, atoi(name) - 1);
+    }
+    p = strrchr(name, '#');
+    if (p) {
+        *p++ = 0;
+        idx = atoi(p);
+    }
+    return mixer_get_control(mixer, name, idx);
+}
+
+
+typedef struct __mixer_command_t {
+    const char* ctrl;
+    const char* value;
+} mixer_command_t;
+
+static mixer_command_t mixer_commands[] = {
+    {"Incall_Music Audio Mixer MultiMedia1",    "1"},
+    {"MultiMedia1 Mixer VOC_REC_DL",            "1"},
+    {NULL,                                      NULL}
+};
+
+int alsa_audio_mixer_set(private_t *tech_pvt) {
+    struct mixer *mixer;
+    struct mixer_ctl *ctl;
+    const char* device = "/dev/snd/controlC0";
+    mixer = mixer_open(device);
+    if (!mixer) {
+        ERRORA("mixer_open failed: %s\n", GSMOPEN_P_LOG, strerror(errno));
+        return -1;
+    }
+    mixer_command_t *pos = mixer_commands;
+    for (; pos->ctrl != NULL; pos++) {
+        ctl = alsa_audio_get_ctl(mixer, pos->ctrl);
+        if (!ctl) {
+            ERRORA("get_ctl failed: %s\n", GSMOPEN_P_LOG, strerror(errno));
+            mixer_close(mixer);
+            return -1;
+        }
+        if (mixer_ctl_set_value(ctl, 1, (char**)&pos->value)) {
+            ERRORA("mixer_ctl_set_value failed: %s\n", GSMOPEN_P_LOG, strerror(errno));
+            return -1;
+        }
+    }
+    mixer_close(mixer);
+    return 0;
+}
+
 int alsa_audio_init(private_t *tech_pvt) {
 	tech_pvt->alsa_audio_opened = 1;
     if (tech_pvt->alsa_priv == NULL) {
@@ -183,6 +235,11 @@ int alsa_audio_init(private_t *tech_pvt) {
         tech_pvt->alsa_priv = calloc(1, sizeof(alsa_object_t));
         alsa_object_t *alsa = (alsa_object_t*)tech_pvt->alsa_priv;
         const char* device = "hw:0,0"; //TODO: need to take from configuration
+        // setup mixer for Samsung
+        // TODO: need to move it for some kind of preinit script
+        if (alsa_audio_mixer_set(tech_pvt)) {
+            return -errno;
+        }
         // open pcm_out
         alsa->pcm_out = pcm_open(PCM_OUT|PCM_MONO|PCM_NMMAP, (char*)device);
         if (!pcm_ready(alsa->pcm_out)) {
