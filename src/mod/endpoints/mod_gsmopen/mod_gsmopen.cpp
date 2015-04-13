@@ -839,7 +839,6 @@ static switch_status_t channel_write_frame(switch_core_session_t *session, switc
 #ifdef ANDROID
 		if (!tech_pvt->alsa_audio_opened) {
 			alsa_audio_init(tech_pvt);
-            ERRORA("Why???? \n", GSMOPEN_P_LOG);
 		}
         // sent always 320 bytes ... ??
 		sent = alsa_audio_write(tech_pvt, (char *) frame->data, (int) (frame->datalen));
