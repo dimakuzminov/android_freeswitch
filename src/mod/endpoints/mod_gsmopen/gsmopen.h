@@ -118,13 +118,21 @@ typedef enum {
 	GFLAG_MY_CODEC_PREFS = (1 << 0)
 } GFLAGS;
 
+#if 1
 #define DEBUGA_GSMOPEN(...)  switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_DEBUG, 		"rev %s [%p|%-7lx][DEBUG_GSMOPEN  %-5d][%-10s][%2d,%2d,%2d] " __VA_ARGS__ );
 #define DEBUGA_CALL(...)  switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_DEBUG, 		"rev %s [%p|%-7lx][DEBUG_CALL  %-5d][%-10s][%2d,%2d,%2d] " __VA_ARGS__ );
 #define DEBUGA_PBX(...)  switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_DEBUG, 		"rev %s [%p|%-7lx][DEBUG_PBX  %-5d][%-10s][%2d,%2d,%2d] " __VA_ARGS__ );
 #define ERRORA(...)  switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_ERROR, 		"rev %s [%p|%-7lx][ERRORA  %-5d][%-10s][%2d,%2d,%2d] " __VA_ARGS__ );
 #define WARNINGA(...)  switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_WARNING, 		"rev %s [%p|%-7lx][WARNINGA  %-5d][%-10s][%2d,%2d,%2d] " __VA_ARGS__ );
 #define NOTICA(...)  switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_NOTICE, 		"rev %s [%p|%-7lx][NOTICA  %-5d][%-10s][%2d,%2d,%2d] " __VA_ARGS__ );
-
+#else
+#define DEBUGA_GSMOPEN(...)  switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_ERROR, 		"rev %s [%p|%-7lx][DEBUG_GSMOPEN  %-5d][%-10s][%2d,%2d,%2d] " __VA_ARGS__ );
+#define DEBUGA_CALL(...)  switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_ERROR, 		"rev %s [%p|%-7lx][DEBUG_CALL  %-5d][%-10s][%2d,%2d,%2d] " __VA_ARGS__ );
+#define DEBUGA_PBX(...)  switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_ERROR, 		"rev %s [%p|%-7lx][DEBUG_PBX  %-5d][%-10s][%2d,%2d,%2d] " __VA_ARGS__ );
+#define ERRORA(...)  switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_ERROR, 		"rev %s [%p|%-7lx][ERRORA  %-5d][%-10s][%2d,%2d,%2d] " __VA_ARGS__ );
+#define WARNINGA(...)  switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_ERROR, 		"rev %s [%p|%-7lx][WARNINGA  %-5d][%-10s][%2d,%2d,%2d] " __VA_ARGS__ );
+#define NOTICA(...)  switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_ERROR, 		"rev %s [%p|%-7lx][NOTICA  %-5d][%-10s][%2d,%2d,%2d] " __VA_ARGS__ );
+#endif
 #define GSMOPEN_P_LOG GSMOPEN_SVN_VERSION, (void *)NULL, (unsigned long)55, __LINE__, tech_pvt ? tech_pvt->name ? tech_pvt->name : "none" : "none", -1, tech_pvt ? tech_pvt->interface_state : -1, tech_pvt ? tech_pvt->phone_callflow : -1
 
 /*********************************/
