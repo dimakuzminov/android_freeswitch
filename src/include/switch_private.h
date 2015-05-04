@@ -370,7 +370,7 @@
 #define SWITCH_BYTE_ORDER __LITTLE_ENDIAN
 
 /* where to put cache files */
-#define SWITCH_CACHE_DIR "/storage/sdcard1/freeswitch/cache"
+#define SWITCH_CACHE_DIR "/data/freeswitch/cache"
 
 /* where to put certs files */
 #define SWITCH_CERTS_DIR "/system/etc/security"
@@ -379,7 +379,7 @@
 #define SWITCH_CONF_DIR "/system/opt/freeswitch/conf"
 
 /* where to put db files */
-#define SWITCH_DB_DIR "/storage/sdcard1/freeswitch/db"
+#define SWITCH_DB_DIR "/data/freeswitch/db"
 
 /* Define to 1 to enable deprecated core db events */
 /* #undef SWITCH_DEPRECATED_CORE_DB */
@@ -394,16 +394,16 @@
 #define SWITCH_HTDOCS_DIR "/system/opt/freeswitch/htdocs"
 
 /* where to put log files */
-#define SWITCH_LOG_DIR "/storage/sdcard1/freeswitch/log"
+#define SWITCH_LOG_DIR "/data/freeswitch/log"
 
 /* where to install the modules to */
 #define SWITCH_MOD_DIR "/system/lib"
 
 /* where to put recording files */
-#define SWITCH_RECORDINGS_DIR "/storage/sdcard1/freeswitch/recordings"
+#define SWITCH_RECORDINGS_DIR "/data/freeswitch/recordings"
 
 /* where to put pidfile to */
-#define SWITCH_RUN_DIR "/storage/sdcard1/freeswitch/run"
+#define SWITCH_RUN_DIR "/data/freeswitch/run"
 
 /* where to put script files */
 #define SWITCH_SCRIPT_DIR "/system/opt/freeswitch/scripts"
@@ -412,7 +412,7 @@
 #define SWITCH_SOUNDS_DIR "/system/opt/freeswitch/sounds"
 
 /* where to put storage files */
-#define SWITCH_STORAGE_DIR "/storage/sdcard1/freeswitch/storage"
+#define SWITCH_STORAGE_DIR "/data/freeswitch/storage"
 
 /* Define to 1 if you can safely include both <sys/time.h> and <time.h>. */
 #define TIME_WITH_SYS_TIME 1
