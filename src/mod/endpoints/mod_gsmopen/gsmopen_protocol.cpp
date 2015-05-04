@@ -689,6 +689,18 @@ int gsmopen_serial_config_AT(private_t *tech_pvt)
 
 #endif
 
+    /* lest set extended error codes */
+	res = gsmopen_serial_write_AT_ack(tech_pvt, "AT+CMEE=2");
+	if (res) {
+		DEBUGA_GSMOPEN("AT+CMEE=2 didn't get OK from the phone.\n", GSMOPEN_P_LOG);
+	}
+
+    /* lest check that SIM card inside */
+	res = gsmopen_serial_write_AT_ack(tech_pvt, "AT+CPIN?");
+	if (res) {
+		ERRORA("CRITICAL ERROR - SIM CARD NOT FOUND\n", GSMOPEN_P_LOG);
+	}
+
 /* go until first empty postinit string, or last postinit string */
 	while (1) {
 
