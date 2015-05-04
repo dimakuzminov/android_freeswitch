@@ -29,7 +29,7 @@ typedef struct __alsa_object_t {
     uint32_t        write_buffer_size;
 } alsa_object_t;
 
-static int debug = 1;
+static int debug = 0;
 static int write_period = WRITE_PERIOD_SIZE;
 static int read_period = FREESWITCH_PERIOD_SIZE;
 
@@ -71,9 +71,9 @@ static int set_params_out(private_t *tech_pvt, struct pcm *pcm) {
     pcm->period_size = pcm_period_size(params);
     pcm->period_cnt = pcm->buffer_size/pcm->period_size;
     if (debug) {
-        ERRORA("period_cnt = %d\n", GSMOPEN_P_LOG, pcm->period_cnt);
-        ERRORA("period_size = %d\n", GSMOPEN_P_LOG, pcm->period_size);
-        ERRORA("buffer_size = %d\n", GSMOPEN_P_LOG, pcm->buffer_size);
+        DEBUGA_GSMOPEN("period_cnt = %d\n", GSMOPEN_P_LOG, pcm->period_cnt);
+        DEBUGA_GSMOPEN("period_size = %d\n", GSMOPEN_P_LOG, pcm->period_size);
+        DEBUGA_GSMOPEN("buffer_size = %d\n", GSMOPEN_P_LOG, pcm->buffer_size);
     }
     sparams = (struct snd_pcm_sw_params*) calloc(1, sizeof(struct snd_pcm_sw_params));
     if (!sparams) {
@@ -94,11 +94,11 @@ static int set_params_out(private_t *tech_pvt, struct pcm *pcm) {
         return -errno;
     }
     if (debug) {
-        ERRORA("sparams->avail_min= %lu\n", GSMOPEN_P_LOG, sparams->avail_min);
-        ERRORA(" sparams->start_threshold= %lu\n", GSMOPEN_P_LOG, sparams->start_threshold);
-        ERRORA(" sparams->stop_threshold= %lu\n", GSMOPEN_P_LOG, sparams->stop_threshold);
-        ERRORA(" sparams->xfer_align= %lu\n", GSMOPEN_P_LOG, sparams->xfer_align);
-        ERRORA(" sparams->boundary= %lu\n", GSMOPEN_P_LOG, sparams->boundary);
+        DEBUGA_GSMOPEN("sparams->avail_min= %lu\n", GSMOPEN_P_LOG, sparams->avail_min);
+        DEBUGA_GSMOPEN(" sparams->start_threshold= %lu\n", GSMOPEN_P_LOG, sparams->start_threshold);
+        DEBUGA_GSMOPEN(" sparams->stop_threshold= %lu\n", GSMOPEN_P_LOG, sparams->stop_threshold);
+        DEBUGA_GSMOPEN(" sparams->xfer_align= %lu\n", GSMOPEN_P_LOG, sparams->xfer_align);
+        DEBUGA_GSMOPEN(" sparams->boundary= %lu\n", GSMOPEN_P_LOG, sparams->boundary);
     }
     return 0;
 }
@@ -138,9 +138,9 @@ static int set_params_in(private_t *tech_pvt, struct pcm *pcm)
     pcm->period_size = pcm_period_size(params);
     pcm->period_cnt = pcm->buffer_size/pcm->period_size;
     if (debug) {
-        ERRORA("period_size (%d)\n", GSMOPEN_P_LOG, pcm->period_size);
-        ERRORA(" buffer_size (%d)\n", GSMOPEN_P_LOG, pcm->buffer_size);
-        ERRORA(" period_cnt  (%d)\n", GSMOPEN_P_LOG, pcm->period_cnt);
+        DEBUGA_GSMOPEN("period_size (%d)\n", GSMOPEN_P_LOG, pcm->period_size);
+        DEBUGA_GSMOPEN(" buffer_size (%d)\n", GSMOPEN_P_LOG, pcm->buffer_size);
+        DEBUGA_GSMOPEN(" period_cnt  (%d)\n", GSMOPEN_P_LOG, pcm->period_cnt);
     }
     sparams = (struct snd_pcm_sw_params*) calloc(1, sizeof(struct snd_pcm_sw_params));
     if (!sparams) {
@@ -167,10 +167,10 @@ static int set_params_in(private_t *tech_pvt, struct pcm *pcm)
         return -errno;
     }
     if (debug) {
-        ERRORA("avail_min (%lu)\n", GSMOPEN_P_LOG, sparams->avail_min);
-        ERRORA("start_threshold (%lu)\n", GSMOPEN_P_LOG, sparams->start_threshold);
-        ERRORA("stop_threshold (%lu)\n", GSMOPEN_P_LOG, sparams->stop_threshold);
-        ERRORA("xfer_align (%lu)\n", GSMOPEN_P_LOG, sparams->xfer_align);
+        DEBUGA_GSMOPEN("avail_min (%lu)\n", GSMOPEN_P_LOG, sparams->avail_min);
+        DEBUGA_GSMOPEN("start_threshold (%lu)\n", GSMOPEN_P_LOG, sparams->start_threshold);
+        DEBUGA_GSMOPEN("stop_threshold (%lu)\n", GSMOPEN_P_LOG, sparams->stop_threshold);
+        DEBUGA_GSMOPEN("xfer_align (%lu)\n", GSMOPEN_P_LOG, sparams->xfer_align);
     }
     return 0;
 }
