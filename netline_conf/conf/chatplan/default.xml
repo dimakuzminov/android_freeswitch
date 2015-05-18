@@ -3,7 +3,7 @@
   <context name="default">
 <!-- Incoming SMS REWRITE RULES -->
     <extension name="incoming_sms">
-      <condition field="hint" exression="gsm.*">
+      <condition field="hint" expression="gsm.*">
 	<action application="lua" data="receive_sms.lua"/>
 
 <!--
@@ -24,7 +24,7 @@
     <!-- Outgoing SMS REWRITE RULES -->
     <extension name="outgoing_sms">
 
-      <condition field="to_user" expression="^(0\d+)$">
+      <condition field="to_user" expression="^0|\+(\d+)$">
 	
 <!--	
     <action application="set" data="to_user=$1"/>
@@ -35,7 +35,7 @@
     <action application="info"/>
 	<action application="send"/>
  -->
-	<action application="lua" data="send_sms.lua"/>
+	<action application="lua" data="send_sms_sofia_demo.lua"/>
 	 
       </condition>
      </extension>
@@ -54,7 +54,7 @@
 	<action application="info" />
 	<action application="send"/>
 -->
-	<action application="lua" data="send_sms.lua"/>
+	<action application="lua" data="send_sms_sofia_demo.lua"/>
       </condition>
 
 
