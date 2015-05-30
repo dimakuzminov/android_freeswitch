@@ -2,7 +2,7 @@
  <!-- dial number via gsmopen using interface1 interface to go out -->
     <extension name="simbox">
       <condition field="destination_number" expression="^2(\d+)$">
-          <action application="bridge" data="[sip_auth_username=${destination_number},sip_auth_password=5555]sofia/external/${destination_number}@192.168.43.100"/>
+          <action application="bridge" data="[sip_auth_username=${destination_number},sip_auth_password=5555]sofia/external/${destination_number}@172.16.2.102"/>
       </condition>
     </extension>
 </include>
