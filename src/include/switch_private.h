@@ -376,7 +376,7 @@
 #define SWITCH_CERTS_DIR "/system/etc/security"
 
 /* directory for configuration files */
-#define SWITCH_CONF_DIR "/system/opt/freeswitch/conf"
+#define SWITCH_CONF_DIR "/data/freeswitch/conf"
 
 /* where to put db files */
 #define SWITCH_DB_DIR "/data/freeswitch/db"
@@ -385,13 +385,13 @@
 /* #undef SWITCH_DEPRECATED_CORE_DB */
 
 /* where to put grammar files */
-#define SWITCH_GRAMMAR_DIR "/system/opt/freeswitch/grammar"
+#define SWITCH_GRAMMAR_DIR "/data/freeswitch/grammar"
 
 /* Define to 1 if PostgreSQL libraries are available */
 /* #undef SWITCH_HAVE_PGSQL */
 
 /* where to put htdocs files */
-#define SWITCH_HTDOCS_DIR "/system/opt/freeswitch/htdocs"
+#define SWITCH_HTDOCS_DIR "/data/freeswitch/htdocs"
 
 /* where to put log files */
 #define SWITCH_LOG_DIR "/data/freeswitch/log"
@@ -406,10 +406,10 @@
 #define SWITCH_RUN_DIR "/data/freeswitch/run"
 
 /* where to put script files */
-#define SWITCH_SCRIPT_DIR "/system/opt/freeswitch/scripts"
+#define SWITCH_SCRIPT_DIR "/data/freeswitch/scripts"
 
 /* where to put sounds files */
-#define SWITCH_SOUNDS_DIR "/system/opt/freeswitch/sounds"
+#define SWITCH_SOUNDS_DIR "/data/freeswitch/sounds"
 
 /* where to put storage files */
 #define SWITCH_STORAGE_DIR "/data/freeswitch/storage"
