@@ -81,15 +81,15 @@ LOCAL_C_INCLUDES += \
 					$(LOCAL_PATH)/libs/apr/random/unix \
 					$(LOCAL_PATH)/libs/apr-util/include \
 					$(LOCAL_PATH)/libs/apr-util/include/private \
-					$(LOCAL_PATH)/../srtp/crypto/include/ \
-					$(LOCAL_PATH)/../pcre \
-					$(LOCAL_PATH)/../srtp/include \
+					$(LOCAL_PATH)/libs/libctb-0.16/include \
+					$(LOCAL_PATH)/libs/pcre \
 					$(LOCAL_PATH)/../curl/include \
+					$(LOCAL_PATH)/../srtp/crypto/include/ \
+					$(LOCAL_PATH)/../srtp/include \
 					$(LOCAL_PATH)/../sqlite/dist \
 					$(LOCAL_PATH)/../openssl/include \
 					$(LOCAL_PATH)/../speex/include \
 					$(LOCAL_PATH)/../regex-re2 \
-					$(LOCAL_PATH)/../libctb-0.16/include \
 					$(LOCAL_PATH)/..//e2fsprogs/lib \
 
 LOCAL_MODULE_TAGS := optional
@@ -145,15 +145,15 @@ LOCAL_C_INCLUDES += \
 					$(LOCAL_PATH)/libs/apr/random/unix \
 					$(LOCAL_PATH)/libs/apr-util/include \
 					$(LOCAL_PATH)/libs/apr-util/include/private \
+					$(LOCAL_PATH)/libs/libctb-0.16/include \
+					$(LOCAL_PATH)/../curl/include \
 					$(LOCAL_PATH)/../srtp/crypto/include/ \
 					$(LOCAL_PATH)/../srtp/include \
-					$(LOCAL_PATH)/../curl/include \
 					$(LOCAL_PATH)/../sqlite/dist \
 					$(LOCAL_PATH)/../openssl/include \
 					$(LOCAL_PATH)/../speex/include \
 					$(LOCAL_PATH)/../regex-re2 \
 					$(LOCAL_PATH)/../regex-re2/util \
-					$(LOCAL_PATH)/../libctb-0.16/include \
 					$(LOCAL_PATH)/..//e2fsprogs/lib \
 
 LOCAL_MODULE_TAGS := optional

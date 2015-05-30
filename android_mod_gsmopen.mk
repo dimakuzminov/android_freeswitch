@@ -26,7 +26,8 @@ LOCAL_C_INCLUDES += \
 					$(LOCAL_PATH)/libs/apr-util/include \
 					$(LOCAL_PATH)/libs/apr-util/include/private \
 					$(LOCAL_PATH)/libs/libnatpmp/ \
-					$(LOCAL_PATH)/../android_gsmlib/ \
+					$(LOCAL_PATH)/libs/libctb-0.16/include \
+					$(LOCAL_PATH)/libs/android_gsmlib/ \
 					$(LOCAL_PATH)/../srtp/crypto/include \
 					$(LOCAL_PATH)/../srtp/include \
 					$(LOCAL_PATH)/../curl/include \
@@ -35,7 +36,6 @@ LOCAL_C_INCLUDES += \
 					$(LOCAL_PATH)/../speex/include \
 					$(LOCAL_PATH)/../regex-re2 \
 					$(LOCAL_PATH)/../regex-re2/util \
-					$(LOCAL_PATH)/../libctb-0.16/include \
 					$(LOCAL_PATH)/../e2fsprogs/lib \
 					$(LOCAL_PATH)/../jpeg \
 					$(LOCAL_PATH)/../../prebuilts/ndk/8/sources/cxx-stl/gnu-libstdc++/4.7/include \
