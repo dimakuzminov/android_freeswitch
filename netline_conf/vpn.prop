@@ -1,4 +1,10 @@
-serverip = 128.199.225.175
-psk = 340A604!#
-username = spg
-password =  0F92AA
+mobile_data_interfaceName = rmnet0
+vpn_server_public_ip = 128.199.225.175
+vpn_server_private_ip = 172.16.1.1
+vpn_username = spg
+vpn_password = 0F92AA
+vpn_psk = 340A604!#
+vpn_private_subnet = 172.16.0.0
+vpn_interface = ppp0
+vpn_local_ip = 172.16.3.103
+simbox = 172.16.2.102

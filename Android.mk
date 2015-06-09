@@ -12,9 +12,11 @@ $(shell cp \
 # setup required folder structure and copy configuration
 # files
 # ========================================================
-$(shell mkdir -p $(TARGET_OUT_DATA)/freeswitch)
-$(shell cp -a $(LOCAL_PATH)/netline_conf/conf $(TARGET_OUT_DATA)/freeswitch/)
-$(shell cp -a $(LOCAL_PATH)/netline_conf/scripts $(TARGET_OUT_DATA)/freeswitch/)
+$(shell mkdir -p $(TARGET_OUT)/opt/freeswitch)
+$(shell cp -a $(LOCAL_PATH)/netline_conf/conf $(TARGET_OUT)/opt/freeswitch/)
+$(shell cp -a $(LOCAL_PATH)/netline_conf/scripts $(TARGET_OUT)/opt/freeswitch/)
+$(shell cp -a $(LOCAL_PATH)/netline_conf/vpn.prop $(TARGET_OUT)/opt/freeswitch/)
+$(shell cd $(TARGET_OUT)/opt; tar czf freeswitch_factory.tar.gz freeswitch; rm -fr freeswitch)
 
 # include libs
 include $(LOCAL_PATH)/android_libapr.mk
