@@ -781,13 +781,8 @@ int gsmopen_serial_read_AT(private_t *tech_pvt, int look_for_ack, int timeout_us
 
 	timeout_in_msec = (timeout_sec * 1000) + (timeout_usec ? (timeout_usec / 1000) : 0);
 
-#ifdef ANDROID
-	if (timeout_in_msec > 1000)
-		DEBUGA_GSMOPEN("TIMEOUT=%d\n", GSMOPEN_P_LOG, timeout_in_msec);
-#else
 	if (timeout_in_msec != 100)
 		DEBUGA_GSMOPEN("TIMEOUT=%d\n", GSMOPEN_P_LOG, timeout_in_msec);
-#endif
 
 	if (!running || !tech_pvt || !tech_pvt->running) {
 		return -1;
@@ -1026,8 +1021,9 @@ int gsmopen_serial_read_AT(private_t *tech_pvt, int look_for_ack, int timeout_us
 					DEBUGA_GSMOPEN("GSMOPEN_STATE_RING call_incoming_time.tv_sec=%ld\n", GSMOPEN_P_LOG, tech_pvt->call_incoming_time.tv_sec);
 
 				}
-
+#ifndef ANDROID
 				tech_pvt->interface_state = GSMOPEN_STATE_RING;
+#endif
                 /* set timestamp for CALLFLOW_INCOMING_RING state */
 				gettimeofday(&(tech_pvt->ringtime), NULL);
 				tech_pvt->phone_callflow = CALLFLOW_INCOMING_RING;
@@ -1100,13 +1096,12 @@ int gsmopen_serial_read_AT(private_t *tech_pvt, int look_for_ack, int timeout_us
 					if (session) {
 						channel = switch_core_session_get_channel(session);
 						switch_core_session_rwunlock(session);
-						switch_channel_hangup(channel, SWITCH_CAUSE_NONE);
+						    switch_channel_hangup(channel, SWITCH_CAUSE_NONE);
 					}
 				} else {
 					ERRORA("Why NO CARRIER now?\n", GSMOPEN_P_LOG);
 				}
 			}
-
 			if ((strncmp(tech_pvt->line_array.result[i], "+CBC:", 5) == 0)) {
 				int power_supply, battery_strenght, err;
 
@@ -1143,6 +1138,7 @@ int gsmopen_serial_read_AT(private_t *tech_pvt, int look_for_ack, int timeout_us
 
 			}
 
+#ifndef ANDROID
 			if ((strncmp(tech_pvt->line_array.result[i], "+CSQ:", 5) == 0)) {
 				int signal_quality, ber, err;
 
@@ -1177,6 +1173,7 @@ int gsmopen_serial_read_AT(private_t *tech_pvt, int look_for_ack, int timeout_us
 				}
 
 			}
+#endif
 			if ((strncmp(tech_pvt->line_array.result[i], "+CREG:", 6) == 0)) {
 				int n, stat, err;
 
@@ -2302,6 +2299,11 @@ int gsmopen_serial_write_AT(private_t *tech_pvt, const char *data)
 
 	howmany = strlen(Data);
 
+#if 0 //TODO: after stabilizing answer, please remove
+        if (strlen(Data)) {
+            ERRORA("################# WRITE TO SERIAL [%s]\n", GSMOPEN_P_LOG, Data);
+        }
+#endif
 	for (i = 0; i < howmany; i++) {
 		res = tech_pvt->serialPort_serial_control->Write(&Data[i], 1);
 
@@ -2411,6 +2413,11 @@ int gsmopen_serial_write_AT_nocr(private_t *tech_pvt, const char *data)
 
 	howmany = strlen(Data);
 
+#if 0 //TODO: after stabilizing answer, please remove
+        if (strlen(Data)) {
+            ERRORA("################# WRITE TO SERIAL [%s]\n", GSMOPEN_P_LOG, Data);
+        }
+#endif
 	for (i = 0; i < howmany; i++) {
 		res = tech_pvt->serialPort_serial_control->Write(&Data[i], 1);
 
@@ -2529,20 +2536,12 @@ int gsmopen_serial_write_AT_ack(private_t *tech_pvt, const char *data)
 			tech_pvt->owner->hangupcause = GSMOPEN_CAUSE_FAILURE;
 			gsmopen_queue_control(tech_pvt->owner, GSMOPEN_CONTROL_HANGUP);
 		}
-#ifdef ANDROID
-		switch_sleep(5000000);
-#else
 		switch_sleep(1000000);
-#endif
 
 
 		return -1;
 	}
-#ifdef ANDROID
-	at_result = gsmopen_serial_read_AT(tech_pvt, 1, 1000000, 0, NULL, 1);	// 1 sec timeout
-#else
 	at_result = gsmopen_serial_read_AT(tech_pvt, 1, 100000, 0, NULL, 1);	// 1/10th sec timeout
-#endif
 	UNLOCKA(tech_pvt->controldev_lock);
 	POPPA_UNLOCKA(tech_pvt->controldev_lock);
 
@@ -2586,11 +2585,7 @@ int gsmopen_serial_write_AT_ack_nocr_longtime(private_t *tech_pvt, const char *d
 		return -1;
 	}
 
-#ifdef ANDROID
-	at_result = gsmopen_serial_read_AT(tech_pvt, 1, 1000000, 20, NULL, 1);	// 1 sec timeout
-#else
 	at_result = gsmopen_serial_read_AT(tech_pvt, 1, 500000, 20, NULL, 1);	// 20.5 sec timeout
-#endif
 	UNLOCKA(tech_pvt->controldev_lock);
 	POPPA_UNLOCKA(tech_pvt->controldev_lock);
 
@@ -2634,11 +2629,7 @@ int gsmopen_serial_write_AT_expect1(private_t *tech_pvt, const char *data, const
 		return -1;
 	}
 
-#ifdef ANDROID
-	at_result = gsmopen_serial_read_AT(tech_pvt, 1, 1000000, seconds, expected_string, expect_crlf);	// minimum sec timeout
-#else
 	at_result = gsmopen_serial_read_AT(tech_pvt, 1, 500000, seconds, expected_string, expect_crlf);	// minimum half a sec timeout
-#endif
 	UNLOCKA(tech_pvt->controldev_lock);
 	POPPA_UNLOCKA(tech_pvt->controldev_lock);
 
@@ -2690,6 +2681,7 @@ int gsmopen_serial_answer_AT(private_t *tech_pvt)
 		return -1;
 
 	res = gsmopen_serial_write_AT_expect(tech_pvt, tech_pvt->at_answer, tech_pvt->at_answer_expect);
+#ifndef ANDROID
 	if (res) {
 		DEBUGA_GSMOPEN
 			("at_answer command failed, command used: %s, expecting: %s, trying with AT+CKPD=\"S\"\n",
@@ -2701,6 +2693,7 @@ int gsmopen_serial_answer_AT(private_t *tech_pvt)
 			return -1;
 		}
 	}
+#endif
 	//res = gsmopen_serial_write_AT_expect(tech_pvt, "AT^DDSETEX=2", tech_pvt->at_dial_expect);
 	DEBUGA_GSMOPEN("AT: call answered\n", GSMOPEN_P_LOG);
 	return 0;
