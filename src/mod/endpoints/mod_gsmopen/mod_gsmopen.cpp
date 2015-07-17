@@ -38,7 +38,7 @@ extern int alsa_audio_init(private_t *tech_pvt);
 extern int alsa_audio_shutdown(private_t *tech_pvt);
 extern int alsa_audio_write(private_t *tech_pvt, char *data, int datalen);
 extern int alsa_audio_read(private_t *tech_pvt, char *data, int datalen);
-
+extern int alsa_audio_mixer_set(private_t *tech_pvt);
 #endif
 
 SWITCH_BEGIN_EXTERN_C SWITCH_MODULE_LOAD_FUNCTION(mod_gsmopen_load);
@@ -248,6 +248,9 @@ switch_status_t gsmopen_tech_init(private_t *tech_pvt, switch_core_session_t *se
 	switch_clear_flag(tech_pvt, TFLAG_HANGUP);
 	switch_mutex_unlock(tech_pvt->flag_mutex);
 	DEBUGA_GSMOPEN("gsmopen_codec SUCCESS\n", GSMOPEN_P_LOG);
+#ifdef ANDROID    
+    tech_pvt->need_to_init_mux = 1;
+#endif
 	return SWITCH_STATUS_SUCCESS;
 }
 
@@ -688,6 +691,10 @@ static switch_status_t channel_read_frame(switch_core_session_t *session, switch
 	}
 	memset(buffer2, 0, sizeof(buffer2));
 #ifdef ANDROID
+    if (tech_pvt->need_to_init_mux) {
+        tech_pvt->need_to_init_mux = 0;
+        alsa_audio_mixer_set(tech_pvt);
+    }
     samples = alsa_audio_read(tech_pvt, buffer2, 320);
 #else
 	samples = tech_pvt->serialPort_serial_audio->Read(buffer2, 640);
@@ -841,6 +848,10 @@ static switch_status_t channel_write_frame(switch_core_session_t *session, switc
 			alsa_audio_init(tech_pvt);
 		}
         // sent always 320 bytes ... ??
+        if (tech_pvt->need_to_init_mux) {
+            tech_pvt->need_to_init_mux = 0;
+            alsa_audio_mixer_set(tech_pvt);
+        }
 		sent = alsa_audio_write(tech_pvt, (char *) frame->data, (int) (frame->datalen));
 #else
 		if (!tech_pvt->serialPort_serial_audio_opened) {
@@ -906,6 +917,9 @@ static switch_status_t channel_receive_message(switch_core_session_t *session, s
 			if (tech_pvt->interface_state != GSMOPEN_STATE_UP && tech_pvt->phone_callflow != CALLFLOW_CALL_ACTIVE) {
 				DEBUGA_GSMOPEN("MSG_ID=%d, TO BE ANSWERED!\n", GSMOPEN_P_LOG, msg->message_id);
 				channel_answer_channel(session);
+#ifdef ANDROID    
+                tech_pvt->need_to_init_mux = 1;
+#endif
 			}
 		}
 		break;
@@ -916,6 +930,9 @@ static switch_status_t channel_receive_message(switch_core_session_t *session, s
 			if (tech_pvt->interface_state != GSMOPEN_STATE_UP && tech_pvt->phone_callflow != CALLFLOW_CALL_ACTIVE) {
 				DEBUGA_GSMOPEN("MSG_ID=%d, TO BE ANSWERED!\n", GSMOPEN_P_LOG, msg->message_id);
 				channel_answer_channel(session);
+#ifdef ANDROID    
+                tech_pvt->need_to_init_mux = 1;
+#endif
 			}
 		}
 		break;
@@ -1108,6 +1125,9 @@ static switch_call_cause_t channel_outgoing_channel(switch_core_session_t *sessi
 		switch_mutex_unlock(tech_pvt->flag_mutex);
 		switch_channel_set_state(channel, CS_INIT);
 		result=gsmopen_call(tech_pvt, rdest, 30);
+#ifdef ANDROID    
+        tech_pvt->need_to_init_mux = 1;
+#endif
 		switch_mutex_unlock(globals.mutex);
 		if(result != 0){
 			return SWITCH_CAUSE_DESTINATION_OUT_OF_ORDER;

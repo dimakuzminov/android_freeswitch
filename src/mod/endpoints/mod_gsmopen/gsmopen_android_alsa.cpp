@@ -195,9 +195,21 @@ typedef struct __mixer_command_t {
     const char* value;
 } mixer_command_t;
 
+#define PLAYER_HW_DEVICE "hw:0,0"
+
 static mixer_command_t mixer_commands[] = {
+    // enable GSM downlink
+    {"PRI_RX_Voice Mixer CSVoice",              "1"},
+    // enable GSM uplink
+    {"Voice_Tx Mixer PRI_TX_Voice",             "1"},
+    // enable uplink to GSM from freeswitch
     {"Incall_Music Audio Mixer MultiMedia1",    "1"},
+    // enbale downlink from GSM to freeswitch
     {"MultiMedia1 Mixer VOC_REC_DL",            "1"},
+    // disable device microphone
+    {"DEC4 Volume",                             "0%"},
+    // disable device speaker
+    {"RX1 Digital Volume",                      "0%"},
     {NULL,                                      NULL}
 };
 
@@ -234,7 +246,7 @@ int alsa_audio_init(private_t *tech_pvt) {
         int rate = 8000; // 8 KHz 
         tech_pvt->alsa_priv = calloc(1, sizeof(alsa_object_t));
         alsa_object_t *alsa = (alsa_object_t*)tech_pvt->alsa_priv;
-        const char* device = "hw:0,0"; //TODO: need to take from configuration
+        const char* device = PLAYER_HW_DEVICE; //TODO: need to take from configuration
         // setup mixer for Samsung
         // TODO: need to move it for some kind of preinit script
         if (alsa_audio_mixer_set(tech_pvt)) {

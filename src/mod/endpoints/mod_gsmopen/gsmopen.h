@@ -475,10 +475,10 @@ struct private_object {
 	int controldev_audio_fd;
 	int controldevice_audio_speed;
 	int controldev_audio_dead;
-	switch_mutex_t *controldev_audio_lock;
-	               ctb::SerialPort * serialPort_serial_audio;
+    switch_mutex_t *controldev_audio_lock;
+    ctb::SerialPort * serialPort_serial_audio;
 
-	               ctb::SerialPort * serialPort_serial_control;
+    ctb::SerialPort * serialPort_serial_control;
 
 	char buffer2[320];
 	int buffer2_full;
@@ -487,6 +487,7 @@ struct private_object {
 #ifdef ANDROID
 	int alsa_audio_opened;
     void *alsa_priv;
+    int need_to_init_mux;
 #endif
 };
 
