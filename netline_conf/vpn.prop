@@ -10,3 +10,5 @@ vpn_local_ip = 172.16.3.103
 simbox = 172.16.2.102
 dns1 = 8.8.8.8
 dns2 = 8.8.4.4
+wifi_ssid = vaulto
+wifi_password = vaulto2015!

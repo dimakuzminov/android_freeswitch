@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # copy data
-cp -fr ${SECONDARY_STORAGE}/freeswitch /data/
+cp -fr ${SECONDARY_STORAGE}/freeswitch/scripts /data/freeswitch/
 
 # open permissions
 chmod 777 /data/freeswitch
